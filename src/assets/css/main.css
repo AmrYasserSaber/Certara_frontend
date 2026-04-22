@@ -1,0 +1,331 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ========================================================================== */
+/* 1. Global resets & RTL defaults                                            */
+/* ========================================================================== */
+@layer base {
+  html {
+    direction: rtl;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-surface text-on-surface font-body antialiased min-h-screen;
+    font-feature-settings: 'ss01', 'ss02';
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply font-headline;
+  }
+
+  /* Material Symbols defaults — overridable per-instance */
+  .material-symbols-outlined {
+    font-variation-settings:
+      'FILL' 0,
+      'wght' 400,
+      'GRAD' 0,
+      'opsz' 24;
+    user-select: none;
+    direction: ltr;
+  }
+
+  .material-symbols-outlined.filled {
+    font-variation-settings:
+      'FILL' 1,
+      'wght' 500,
+      'GRAD' 0,
+      'opsz' 24;
+  }
+
+  /* Use LTR numerics for mono/ID fields even in RTL context */
+  .font-mono,
+  .tabular-nums {
+    direction: ltr;
+    unicode-bidi: isolate;
+    font-variant-numeric: tabular-nums;
+  }
+
+  :focus-visible {
+    @apply outline-none ring-2 ring-primary/40 ring-offset-2 ring-offset-surface;
+  }
+}
+
+/* ========================================================================== */
+/* 2. Component utilities (stitch-derived)                                    */
+/* ========================================================================== */
+@layer components {
+  /* ------------------------ Surfaces ------------------------ */
+  .card {
+    @apply bg-surface-container-lowest rounded-xl border border-outline-variant/15 shadow-ambient-sm;
+  }
+
+  .card-elevated {
+    @apply bg-surface-container-lowest rounded-xl shadow-ambient border border-outline-variant/10;
+  }
+
+  .card-flat {
+    @apply bg-surface-container-low rounded-xl border border-outline-variant/15;
+  }
+
+  .card-inverse {
+    @apply bg-inverse-surface text-inverse-on-surface rounded-xl shadow-ambient;
+  }
+
+  .ghost-border {
+    border: 1px solid rgba(190, 201, 200, 0.15);
+  }
+
+  .ambient-shadow {
+    box-shadow: 0 8px 32px rgba(23, 28, 31, 0.08);
+  }
+
+  .glass-dark {
+    background: rgba(15, 31, 46, 0.95);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+  }
+
+  .glass-light {
+    background: rgba(246, 250, 254, 0.85);
+    backdrop-filter: blur(16px);
+    -webkit-backdrop-filter: blur(16px);
+  }
+
+  /* ------------------------ Gradients ------------------------ */
+  .bg-primary-gradient {
+    background: linear-gradient(180deg, #005454 0%, #0d6e6e 100%);
+  }
+
+  .bg-nav-dark {
+    background: #0f1f2e;
+  }
+
+  .bg-gold-gradient {
+    background: linear-gradient(180deg, #e8a838 0%, #d4982e 100%);
+  }
+
+  /* ------------------------ Buttons ------------------------ */
+  .btn {
+    @apply inline-flex items-center justify-center gap-2 rounded-lg font-headline font-bold
+      px-5 py-3 text-sm leading-none transition-all duration-200
+      disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline-none
+      focus-visible:ring-2 focus-visible:ring-primary/40 focus-visible:ring-offset-2
+      focus-visible:ring-offset-surface select-none whitespace-nowrap;
+  }
+
+  .btn-primary {
+    @apply btn bg-primary-gradient text-on-primary shadow-primary-cta
+      hover:brightness-110 hover:shadow-ambient active:brightness-95;
+  }
+
+  .btn-secondary {
+    @apply btn bg-secondary-container text-on-secondary-container shadow-sm
+      hover:bg-secondary-fixed-dim hover:shadow active:brightness-95;
+  }
+
+  .btn-ghost {
+    @apply btn bg-transparent text-on-surface border border-outline-variant
+      hover:bg-surface-container-high;
+  }
+
+  .btn-outline {
+    @apply btn bg-surface-container-lowest text-on-surface border border-outline-variant
+      hover:bg-surface-container-low;
+  }
+
+  .btn-danger {
+    @apply btn bg-transparent text-error border-2 border-error
+      hover:bg-error-container;
+  }
+
+  .btn-icon {
+    @apply inline-flex items-center justify-center rounded-full p-2 text-on-surface-variant
+      transition-colors hover:bg-surface-container-high hover:text-on-surface
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary/40;
+  }
+
+  .btn-icon-dark {
+    @apply inline-flex items-center justify-center rounded-full p-2 text-slate-300
+      transition-colors hover:bg-white/5 hover:text-white
+      focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white/30;
+  }
+
+  .btn-sm {
+    @apply px-3 py-2 text-xs;
+  }
+
+  .btn-lg {
+    @apply px-7 py-4 text-base;
+  }
+
+  /* ------------------------ Inputs ------------------------ */
+  .form-label {
+    @apply block text-sm font-medium text-on-surface mb-1.5 font-headline;
+  }
+
+  .input {
+    @apply block w-full rounded-lg border-0 bg-surface-container-highest/30 py-3 px-4
+      text-[15px] text-on-surface placeholder:text-on-surface-variant/60
+      ring-1 ring-inset ring-outline-variant/50 transition-all
+      focus:bg-surface-container-lowest focus:ring-2 focus:ring-inset focus:ring-primary
+      disabled:opacity-60 disabled:cursor-not-allowed;
+  }
+
+  .input-error {
+    @apply ring-error/70 focus:ring-error;
+  }
+
+  .input-underline {
+    @apply block w-full border-0 border-b-2 border-outline-variant bg-transparent
+      py-2 px-1 text-sm text-on-surface transition-colors
+      focus:border-primary focus:ring-0 focus:outline-none
+      placeholder:text-on-surface-variant/60;
+  }
+
+  .search-field-light {
+    @apply flex items-center bg-surface-container-lowest rounded-lg border border-outline-variant/30
+      h-10 px-4 gap-2 focus-within:border-primary-container focus-within:ring-2
+      focus-within:ring-primary/20 transition-all;
+  }
+
+  .search-field-dark {
+    @apply flex items-center bg-nav-dark-search rounded-md h-10 px-3 gap-2
+      focus-within:ring-1 focus-within:ring-primary text-white;
+  }
+
+  .form-error {
+    @apply text-xs text-error mt-1 flex items-center gap-1;
+  }
+
+  .form-help {
+    @apply text-xs text-on-surface-variant mt-1;
+  }
+
+  /* ------------------------ Navigation items (sidebar) ------------------------ */
+  .nav-item {
+    @apply flex items-center gap-3 rounded-lg px-4 py-3 text-slate-400 font-medium font-headline
+      transition-colors hover:bg-nav-dark-hover hover:text-white cursor-pointer;
+  }
+
+  .nav-item-active-gold {
+    @apply bg-nav-dark-elevated border-r-4 border-gold-accent text-white font-bold;
+  }
+
+  .nav-item-active-teal {
+    @apply bg-primary-container text-white hover:bg-primary-container/90 font-bold;
+  }
+
+  .nav-item-active-light {
+    @apply bg-surface-container-low text-on-background rounded-l-lg font-bold;
+  }
+
+  /* ------------------------ Badges ------------------------ */
+  .badge {
+    @apply inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-bold
+      font-headline whitespace-nowrap;
+  }
+
+  .badge-neutral {
+    @apply badge bg-surface-container-high text-on-surface-variant;
+  }
+
+  .badge-info {
+    @apply badge bg-tertiary-fixed text-on-tertiary-fixed;
+  }
+
+  .badge-success {
+    @apply badge bg-primary-fixed text-on-primary-fixed;
+  }
+
+  .badge-warning {
+    @apply badge bg-secondary-fixed text-on-secondary-fixed;
+  }
+
+  .badge-error {
+    @apply badge bg-error-container text-on-error-container;
+  }
+
+  .badge-pending {
+    @apply badge bg-secondary-container/30 text-on-secondary-container;
+  }
+
+  /* ------------------------ Tables ------------------------ */
+  .table-shell {
+    @apply overflow-hidden rounded-xl border border-outline-variant/15
+      bg-surface-container-lowest shadow-ambient-sm;
+  }
+
+  .table-base {
+    @apply w-full text-right text-sm border-collapse;
+  }
+
+  .table-head {
+    @apply bg-surface-container-low text-on-surface-variant border-b border-surface-container-high
+      text-xs uppercase tracking-wider font-headline;
+  }
+
+  .table-head th {
+    @apply px-4 py-3 font-bold text-right;
+  }
+
+  .table-row {
+    @apply border-b border-surface-container-high/50 hover:bg-surface-container-low/50
+      transition-colors;
+  }
+
+  .table-row td {
+    @apply px-4 py-3 align-middle;
+  }
+
+  /* ------------------------ Misc ------------------------ */
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .decorative-blob {
+    @apply absolute rounded-full blur-3xl pointer-events-none;
+  }
+
+  .floating-label-input:focus ~ .floating-label,
+  .floating-label-input:not(:placeholder-shown) ~ .floating-label {
+    transform: translateY(-1.5rem) scale(0.85);
+    @apply text-primary;
+  }
+}
+
+/* ========================================================================== */
+/* 3. Utility tweaks                                                          */
+/* ========================================================================== */
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  .bg-dot-grid {
+    background-image: radial-gradient(circle, rgba(190, 201, 200, 0.25) 1px, transparent 1px);
+    background-size: 20px 20px;
+  }
+
+  .scrollbar-thin {
+    scrollbar-width: thin;
+  }
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    @apply bg-outline-variant rounded-full;
+  }
+}

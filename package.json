@@ -1,0 +1,36 @@
+{
+  "name": "irb-digital-system-frontend",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Frontend for the IRB Digital System — Vue 3 + Vite + Tailwind + Pinia (Arabic RTL).",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview",
+    "lint": "eslint . --ext .js,.vue --fix",
+    "format": "prettier --write \"src/**/*.{js,vue,css,md}\""
+  },
+  "dependencies": {
+    "@vueuse/core": "^11.1.0",
+    "axios": "^1.7.7",
+    "dayjs": "^1.11.13",
+    "pinia": "^2.2.4",
+    "vee-validate": "^4.13.2",
+    "vue": "^3.5.12",
+    "vue-router": "^4.4.5",
+    "yup": "^1.4.0"
+  },
+  "devDependencies": {
+    "@tailwindcss/container-queries": "^0.1.1",
+    "@tailwindcss/forms": "^0.5.9",
+    "@vitejs/plugin-vue": "^5.1.4",
+    "autoprefixer": "^10.4.20",
+    "eslint": "9.26.0",
+    "eslint-plugin-vue": "^9.29.0",
+    "postcss": "^8.4.47",
+    "prettier": "^3.3.3",
+    "tailwindcss": "^3.4.14",
+    "vite": "8.0.5"
+  }
+}
