@@ -12,18 +12,22 @@ import StatusBadge from '@/components/shared/StatusBadge.vue';
 // Global styles
 import '@/assets/css/main.css';
 
-const app = createApp(App);
-const pinia = createPinia();
+async function bootstrap() {
+  const app = createApp(App);
+  const pinia = createPinia();
 
-app.use(pinia);
+  app.use(pinia);
 
-// Hydrate auth state BEFORE router navigation so guards see the logged-in user.
-useAuthStore().boot();
+  // Hydrate auth state BEFORE router navigation so guards see the logged-in user.
+  await useAuthStore().boot();
 
-app.use(router);
+  app.use(router);
 
-app.component('BaseButton', BaseButton);
-app.component('AppIcon', AppIcon);
-app.component('StatusBadge', StatusBadge);
+  app.component('BaseButton', BaseButton);
+  app.component('AppIcon', AppIcon);
+  app.component('StatusBadge', StatusBadge);
 
-app.mount('#app');
+  app.mount('#app');
+}
+
+bootstrap();
