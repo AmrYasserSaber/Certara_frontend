@@ -91,7 +91,7 @@ async function uploadRevisedDocuments(files) {
     Object.keys(files).forEach(docType => {
       // Re-uploading only provided modified files
       if (files[docType] instanceof File) {
-        formData.append(`files[${docType}]`, files[docType]);
+        formData.append(`documents[${docType}]`, files[docType]);
         hasFiles = true;
       }
     });

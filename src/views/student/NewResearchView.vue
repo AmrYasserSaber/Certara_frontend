@@ -149,7 +149,7 @@ async function submitAll() {
     const formData = new FormData();
     Object.keys(documents.value).forEach(docType => {
       if (documents.value[docType]) {
-        formData.append(`files[${docType}]`, documents.value[docType]);
+        formData.append(`documents[${docType}]`, documents.value[docType]);
       }
     });
     
