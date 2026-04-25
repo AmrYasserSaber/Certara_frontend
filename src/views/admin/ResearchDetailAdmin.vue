@@ -185,16 +185,12 @@ function mapPaymentStatus(value) {
 async function loadResearchDetail() {
   loading.value = true;
   try {
-    const searchRes = await adminService.allResearch({
-      page: 1,
-      limit: 50,
-      q: String(props.id),
-    });
-    const items = searchRes?.data?.data?.items || [];
-    const found = items.find((item) => Number(item.id) === Number(props.id));
-    research.value = found || null;
+    const res = await adminService.researchDetail(Number(props.id));
+    const payload = res?.data?.data || {};
+    research.value = payload.research || payload || null;
   } catch (err) {
     toast.error(err?.response?.data?.error?.message || 'تعذر تحميل تفاصيل البحث');
+    research.value = null;
   } finally {
     loading.value = false;
   }

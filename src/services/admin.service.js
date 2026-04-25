@@ -60,6 +60,9 @@ export default {
   allResearch(params = {}) {
     return http.get('/admin/research', withCookieAuth({ params }));
   },
+  researchDetail(id) {
+    return http.get(`/admin/research/${id}`, withCookieAuth());
+  },
   assignReviewer(researchId, reviewerId) {
     const payload = {
       reviewer_id: String(reviewerId),
