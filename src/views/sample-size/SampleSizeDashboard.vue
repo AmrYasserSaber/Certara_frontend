@@ -2,16 +2,10 @@
   <AppShellLayout page-title="الأبحاث المعلقة" active-variant="teal">
     <div class="sample-page" dir="rtl">
       <header class="stats-bar">
-        <div class="crumbs">IRB-SYS &gt; W-QUEUE-08</div>
-
         <div class="stats">
           <div class="stat">
             <small>إجمالي الانتظار</small>
             <strong>{{ totalCount }}</strong>
-          </div>
-          <div class="stat danger">
-            <small>أولوية قصوى</small>
-            <strong>{{ highPriorityCount.toString().padStart(2, '0') }}</strong>
           </div>
         </div>
       </header>
@@ -42,7 +36,6 @@
             :submit-action="submitSampleResult"
             @toggle="toggleRow"
             @submitted="onRowSubmitted"
-            @open-protocol="openProtocol"
           />
         </div>
       </section>
@@ -68,12 +61,6 @@ onMounted(async () => {
 });
 
 const totalCount = computed(() => pendingRows.value.length);
-
-const highPriorityCount = computed(() => {
-  const len = pendingRows.value.length;
-  if (!len) return 0;
-  return Math.max(1, Math.ceil(len * 0.2));
-});
 
 async function fetchPending() {
   loading.value = true;
@@ -102,10 +89,6 @@ function onRowSubmitted(researchId) {
     expandedId.value = null;
   }
 }
-
-function openProtocol(item) {
-  toast.info(`فتح البروتوكول: ${item.serial_number || item.id}`);
-}
 </script>
 
 <style scoped>
@@ -129,11 +112,6 @@ function openProtocol(item) {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
-}
-
-.crumbs {
-  color: #475569;
-  font-weight: 700;
 }
 
 .stats {

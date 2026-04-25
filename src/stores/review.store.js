@@ -1,5 +1,14 @@
 import { defineStore } from 'pinia';
 import { reviewService } from '@/services/review.service';
+import researchService from '@/services/research.service';
+
+function unwrapData(payload) {
+  let current = payload;
+  while (current && typeof current === 'object' && 'data' in current) {
+    current = current.data;
+  }
+  return current;
+}
 
 export const useReviewStore = defineStore('review', {
   state: () => ({
@@ -15,7 +24,8 @@ export const useReviewStore = defineStore('review', {
       this.error = '';
       try {
         const response = await reviewService.getAssigned();
-        this.assignedReviews = response?.data?.data?.data ?? [];
+        const assigned = unwrapData(response?.data);
+        this.assignedReviews = Array.isArray(assigned) ? assigned : [];
       } catch (err) {
         this.error = err.response?.data?.error?.message || 'تعذر تحميل الأبحاث المسندة';
         throw err;
@@ -28,8 +38,22 @@ export const useReviewStore = defineStore('review', {
       this.loading = true;
       this.error = '';
       try {
-        const response = await reviewService.getDetail(researchId);
-        this.currentReview = response?.data?.data ?? null;
+        const [detailResponse, documentsResponse] = await Promise.all([
+          reviewService.getDetail(researchId),
+          researchService.listDocuments(researchId).catch(() => null),
+        ]);
+
+        const detail = unwrapData(detailResponse?.data) ?? null;
+        const docsPayload = unwrapData(documentsResponse?.data);
+        const fetchedDocuments = docsPayload?.documents ?? docsPayload ?? detail?.documents ?? [];
+
+        this.currentReview = detail
+          ? {
+              ...detail,
+              documents: Array.isArray(fetchedDocuments) ? fetchedDocuments : [],
+            }
+          : null;
+
         return this.currentReview;
       } catch (err) {
         this.error = err.response?.data?.error?.message || 'تعذر تحميل تفاصيل البحث';

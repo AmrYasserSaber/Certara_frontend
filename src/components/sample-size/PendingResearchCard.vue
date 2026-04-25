@@ -45,21 +45,13 @@
 
           <div class="buttons">
             <BaseButton
-              variant="outline"
-              class="protocol-btn"
-              @click="$emit('open-protocol', item)"
-            >
-              عرض البروتوكول الكامل
-            </BaseButton>
-
-            <BaseButton
               variant="primary"
               icon-right="arrow_back"
               :loading="submitting"
               :disabled="!canSubmit"
               @click="onSubmit"
             >
-              إرسال نتيجة الحساب ←
+              إرسال نتيجة الحساب
             </BaseButton>
           </div>
         </div>
@@ -69,18 +61,6 @@
           <p>
             {{ placeholderAbstract }}
           </p>
-
-          <div class="metrics">
-            <h5>معاملات الإدخال المبدئية</h5>
-            <div class="metric-row">
-              <span>مستوى الثقة:</span>
-              <strong>95%</strong>
-            </div>
-            <div class="metric-row">
-              <span>هامش الخطأ:</span>
-              <strong>5%</strong>
-            </div>
-          </div>
         </div>
       </div>
     </section>
@@ -251,11 +231,6 @@ function formatDate(value) {
   display: flex;
   gap: 10px;
   flex-wrap: wrap;
-}
-
-.protocol-btn {
-  border-color: #f59e0b !important;
-  color: #92400e !important;
 }
 
 .summary-panel p {

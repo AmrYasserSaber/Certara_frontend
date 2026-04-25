@@ -1,6 +1,6 @@
 <template>
   <section class="decision-panel">
-    <h3 class="heading">Review Board: Final Decision</h3>
+    <h3 class="heading">لجنة المراجعة: القرار النهائي</h3>
 
     <div class="actions">
       <BaseButton
@@ -8,7 +8,7 @@
         :loading="submitting && selectedDecision === 'approved'"
         @click="openModal('approved')"
       >
-        Approve
+        قبول
       </BaseButton>
 
       <BaseButton
@@ -17,7 +17,7 @@
         :loading="submitting && selectedDecision === 'revision_requested'"
         @click="openModal('revision_requested')"
       >
-        Request Revisions
+        طلب تعديل
       </BaseButton>
 
       <BaseButton
@@ -25,18 +25,18 @@
         :loading="submitting && selectedDecision === 'rejected'"
         @click="openModal('rejected')"
       >
-        Reject
+        رفض
       </BaseButton>
     </div>
 
-    <BaseModal v-model="showModal" title="Confirm Decision Submission" size="md">
+    <BaseModal v-model="showModal" title="تأكيد إرسال القرار" size="md">
       <div class="modal-body">
-        <p class="modal-text">Your decision will be submitted as final.</p>
+        <p class="modal-text">سيتم اعتماد هذا القرار كقرار نهائي.</p>
 
         <label class="comment-label" for="decision-comment">
-          Decision Notes
-          <span v-if="requiresComment">(Required)</span>
-          <span v-else>(Optional)</span>
+          ملاحظات القرار
+          <span v-if="requiresComment">(إجباري)</span>
+          <span v-else>(اختياري)</span>
         </label>
 
         <textarea
@@ -45,21 +45,21 @@
           class="comment-box"
           maxlength="2000"
           rows="5"
-          placeholder="Write decision reason or final notes..."
+          placeholder="اكتب سبب القرار أو الملاحظات النهائية..."
         />
 
         <small class="hint">{{ comment.length }} / 2000</small>
       </div>
 
       <template #footer>
-        <BaseButton variant="ghost" :disabled="submitting" @click="closeModal"> Cancel </BaseButton>
+        <BaseButton variant="ghost" :disabled="submitting" @click="closeModal"> إلغاء </BaseButton>
         <BaseButton
           variant="primary"
           :disabled="!canConfirm"
           :loading="submitting"
           @click="confirm"
         >
-          Confirm Submission
+          تأكيد الإرسال
         </BaseButton>
       </template>
     </BaseModal>
@@ -115,7 +115,7 @@ async function confirm() {
   submitting.value = true;
   try {
     await props.submitAction(selectedDecision.value, comment.value);
-    toast.success('Decision submitted successfully.');
+    toast.success('تم إرسال القرار بنجاح.');
     emit('decision-submitted', {
       decision: selectedDecision.value,
       comment: comment.value,
@@ -133,7 +133,7 @@ async function confirm() {
   border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 14px;
-  text-align: left;
+  text-align: right;
 }
 
 .heading {

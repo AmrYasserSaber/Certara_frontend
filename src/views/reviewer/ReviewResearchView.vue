@@ -116,7 +116,9 @@ const loading = computed(() => reviewStore.loading);
 const assignedReviews = computed(() => reviewStore.assignedReviews);
 const selectedReview = computed(() => reviewStore.currentReview);
 const selectedResearch = computed(() => selectedReview.value?.research || null);
-const documents = computed(() => selectedReview.value?.documents || []);
+const documents = computed(() =>
+  Array.isArray(selectedReview.value?.documents) ? selectedReview.value.documents : [],
+);
 const comments = computed(() => selectedReview.value?.comments || []);
 
 onMounted(async () => {
@@ -175,7 +177,16 @@ function downloadFirstDocument() {
     return;
   }
 
-  window.open(documents.value[0].file_path, '_blank', 'noopener,noreferrer');
+  window.open(resolveDownloadUrl(documents.value[0].file_path), '_blank', 'noopener,noreferrer');
+}
+
+function resolveDownloadUrl(path) {
+  if (!path) return '#';
+  if (/^https?:\/\//i.test(path)) return path;
+  const apiBase = import.meta.env.VITE_API_BASE_URL || '/api';
+  const host = apiBase.replace(/\/api\/?$/, '');
+  const cleanPath = String(path).replace(/^\/+/, '');
+  return `${host}/${cleanPath}`;
 }
 
 function formatDate(value) {

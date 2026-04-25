@@ -1,18 +1,23 @@
 <template>
   <section class="doc-list">
-    <h3 class="title">Attached Documents</h3>
+    <h3 class="title">المستندات المرفقة</h3>
 
-    <p v-if="!documents.length" class="empty">No attached documents.</p>
+    <p v-if="!documents.length" class="empty">لا توجد مستندات مرفقة.</p>
 
     <ul v-else class="items">
       <li v-for="doc in documents" :key="doc.id" class="item">
         <div class="meta">
-          <strong class="name">{{ doc.original_name }}</strong>
-          <span class="type">{{ doc.type }}</span>
+          <strong class="name">{{ doc.original_name || doc.file_name || 'ملف مرفق' }}</strong>
+          <span class="type">{{ doc.type || 'document' }}</span>
         </div>
 
-        <a :href="doc.file_path" target="_blank" rel="noopener noreferrer" class="download-link">
-          <BaseButton variant="outline" size="sm" icon-left="download"> Download </BaseButton>
+        <a
+          :href="resolveDownloadUrl(doc.file_path)"
+          target="_blank"
+          rel="noopener noreferrer"
+          class="download-link"
+        >
+          <BaseButton variant="outline" size="sm" icon-left="download">تنزيل</BaseButton>
         </a>
       </li>
     </ul>
@@ -28,6 +33,15 @@ defineProps({
     default: () => [],
   },
 });
+
+function resolveDownloadUrl(path) {
+  if (!path) return '#';
+  if (/^https?:\/\//i.test(path)) return path;
+  const apiBase = import.meta.env.VITE_API_BASE_URL || '/api';
+  const host = apiBase.replace(/\/api\/?$/, '');
+  const cleanPath = String(path).replace(/^\/+/, '');
+  return `${host}/${cleanPath}`;
+}
 </script>
 
 <style scoped>

@@ -1,6 +1,6 @@
 <template>
   <section class="composer">
-    <label class="label" for="review-comment-text"> Add Comment </label>
+    <label class="label" for="review-comment-text">إضافة تعليق</label>
 
     <textarea
       id="review-comment-text"
@@ -8,7 +8,7 @@
       class="textarea"
       maxlength="2000"
       rows="4"
-      placeholder="Write your comment here..."
+      placeholder="اكتب تعليقك هنا..."
     />
 
     <div class="footer">
@@ -20,7 +20,7 @@
         :disabled="!canSubmit"
         @click="handleSubmit"
       >
-        Submit Comment
+        إرسال التعليق
       </BaseButton>
     </div>
   </section>
@@ -72,7 +72,7 @@ async function handleSubmit() {
   border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 14px;
-  text-align: left;
+  text-align: right;
 }
 
 .label {

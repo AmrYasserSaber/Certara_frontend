@@ -1,8 +1,8 @@
 <template>
   <section class="thread">
-    <h3 class="title">Comment History</h3>
+    <h3 class="title">سجل التعليقات</h3>
 
-    <p v-if="!sortedComments.length" class="empty">No comments yet.</p>
+    <p v-if="!sortedComments.length" class="empty">لا توجد تعليقات بعد.</p>
 
     <ul v-else class="list">
       <li v-for="comment in sortedComments" :key="comment.id" class="comment">
@@ -32,7 +32,7 @@ const sortedComments = computed(() =>
 function formatDate(value) {
   if (!value) return '-';
   const date = new Date(value);
-  return new Intl.DateTimeFormat('en-US', {
+  return new Intl.DateTimeFormat('ar-EG', {
     dateStyle: 'medium',
     timeStyle: 'short',
   }).format(date);
@@ -45,7 +45,7 @@ function formatDate(value) {
   border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 14px;
-  text-align: left;
+  text-align: right;
 }
 
 .title {
