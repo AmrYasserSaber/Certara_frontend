@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import researchService from '@/services/research.service';
+import paymentService from '@/services/payment.service';
 
 /**
  * DEV 2 — Research store. Filled in by the owning dev; the scaffold provides
@@ -70,6 +71,20 @@ export const useResearchStore = defineStore('research', {
     async uploadDocuments(id, formData) {
       const { data } = await researchService.uploadDocuments(id, formData);
       return data;
+    },
+
+    async submitPayment(researchId, payload) {
+      this.saving = true;
+      try {
+        const { data } = await paymentService.initiate(researchId, payload);
+        await this.fetchOne(researchId);
+        return data;
+      } catch (err) {
+        this.error = err.response?.data?.message || 'تعذر معالجة الدفع';
+        throw err;
+      } finally {
+        this.saving = false;
+      }
     },
 
     reset() {

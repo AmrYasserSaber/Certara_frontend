@@ -62,7 +62,7 @@
           <td class="text-on-surface-variant font-mono">
             {{ formatDate(row.created_at) }}
           </td>
-          <td>
+          <td class="flex items-center gap-2">
             <BaseButton
               variant="ghost"
               size="sm"
@@ -70,6 +70,24 @@
               :to="`/student/research/${row.id}`"
             >
               عرض
+            </BaseButton>
+            <BaseButton
+              v-if="['DRAFT', 'REVISION_REQUESTED'].includes(row.status)"
+              variant="ghost"
+              size="sm"
+              icon-left="edit"
+              :to="`/student/research/${row.id}/edit`"
+            >
+              تعديل
+            </BaseButton>
+            <BaseButton
+              v-if="row.status === 'AWAITING_PAYMENT_1' || row.status === 'AWAITING_PAYMENT_2'"
+              variant="outline"
+              size="sm"
+              icon-left="payments"
+              :to="`/student/research/${row.id}/pay`"
+            >
+              الدفع
             </BaseButton>
           </td>
         </template>
