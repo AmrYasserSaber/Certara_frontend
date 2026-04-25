@@ -13,7 +13,7 @@
         label="البروتوكول البحثي"
         description="البروتوكول التفصيلي للبحث المراد إجراؤه"
         icon="article"
-        required
+        :required="!allowPartial"
       />
 
       <FileUploader
@@ -21,7 +21,7 @@
         label="نموذج التقديم"
         description="نموذج طلب الموافقة من لجنة الأخلاقيات (IRB)"
         icon="feed"
-        required
+        :required="!allowPartial"
       />
 
       <FileUploader
@@ -29,7 +29,7 @@
         label="إقرار تضارب المصالح"
         description="إقرار بعدم وجود تضارب مصالح (COI Form)"
         icon="gavel"
-        required
+        :required="!allowPartial"
       />
 
       <FileUploader
@@ -37,7 +37,7 @@
         label="قائمة المراجعة"
         description="قائمة مراجعة المستندات المطلوبة (Checklist)"
         icon="fact_check"
-        required
+        :required="!allowPartial"
       />
 
       <FileUploader
@@ -45,7 +45,7 @@
         label="استمارة الموافقة المستنيرة"
         description="نموذج موافقة المريض إذا كان البحث يتطلب ذلك"
         icon="assignment_turned_in"
-        required
+        :required="!allowPartial"
       />
     </div>
 
@@ -76,6 +76,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  allowPartial: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const emit = defineEmits(['submit', 'back']);
@@ -95,6 +99,8 @@ watch(() => props.initialFiles, (newVal) => {
 }, { deep: true });
 
 const isValid = computed(() => {
+  if (props.allowPartial) return true;
+  
   return files.value.protocol &&
          files.value.application &&
          files.value.coi &&

@@ -20,6 +20,7 @@
         <BaseCard title="البيانات الأساسية">
           <ResearchForm
             :initial-data="current"
+            allow-partial
             @submit="saveDraft"
             @cancel="$router.push('/student')"
           />
@@ -32,6 +33,7 @@
           </div>
           <DocumentUploadPanel
             :initial-files="{}"
+            allow-partial
             @submit="uploadRevisedDocuments"
             @back="$router.push('/student')"
           />
