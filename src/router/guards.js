@@ -8,8 +8,9 @@ import { ROLE_HOME_ROUTE } from '@/utils/constants';
  *   - meta.roles       (array of allowed roles)
  */
 export function createAuthGuard() {
-  return (to) => {
+  return async (to) => {
     const auth = useAuthStore();
+    await auth.ensureSession();
 
     if (to.meta.guestOnly && auth.isAuthenticated) {
       return { path: ROLE_HOME_ROUTE[auth.user?.role] || '/' };

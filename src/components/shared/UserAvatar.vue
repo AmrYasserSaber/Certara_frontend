@@ -11,6 +11,7 @@
     >
       <img
         v-if="src"
+        :key="src"
         :src="src"
         :alt="name"
         class="w-full h-full object-cover"
@@ -21,12 +22,12 @@
       v-if="showName"
       class="min-w-0"
     >
-      <p class="text-sm font-bold font-headline text-on-background truncate">
+      <p class="text-sm font-bold font-headline text-white truncate">
         {{ name || '—' }}
       </p>
       <p
         v-if="subtitle"
-        class="text-xs text-on-surface-variant truncate"
+        class="text-xs text-gray-300 truncate"
       >
         {{ subtitle }}
       </p>

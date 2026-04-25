@@ -172,7 +172,6 @@ import BaseButton from '@/components/shared/BaseButton.vue';
 import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
 import { useAuthStore } from '@/stores/auth.store';
 import { useToast } from '@/composables/useToast';
-import { ROLE_HOME_ROUTE } from '@/utils/constants';
 
 const auth = useAuthStore();
 const route = useRoute();
@@ -197,8 +196,8 @@ function validate() {
   if (!form.password) {
     errors.password = 'كلمة المرور مطلوبة';
     ok = false;
-  } else if (form.password.length < 6) {
-    errors.password = 'كلمة المرور يجب أن لا تقل عن 6 أحرف';
+  } else if (form.password.length < 8) {
+    errors.password = 'كلمة المرور يجب أن لا تقل عن 8 أحرف';
     ok = false;
   }
   return ok;
@@ -210,8 +209,7 @@ async function onSubmit() {
     await auth.login({ email: form.email, password: form.password });
     toast.success('تم تسجيل الدخول بنجاح');
     const redirect = route.query.redirect;
-    const target =
-      (typeof redirect === 'string' && redirect) || ROLE_HOME_ROUTE[auth.user?.role] || '/';
+    const target = typeof redirect === 'string' && redirect ? redirect : '/profile';
     router.replace(target);
   } catch {
     // error is surfaced via auth.error banner

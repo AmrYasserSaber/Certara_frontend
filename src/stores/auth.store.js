@@ -4,15 +4,18 @@ import { STORAGE_KEYS } from '@/utils/constants';
 
 /**
  * DEV 1 — Auth store.
- * Persists token and user in localStorage so reloads keep you signed in.
+ * Cookie-based auth:
+ * - Access/refresh tokens are HttpOnly cookies (not readable by JS).
+ * - We optionally cache the safe user payload in localStorage for quick boot,
+ *   but we validate via /auth/me.
  */
 export const useAuthStore = defineStore('auth', {
   state: () => ({
     user: /** @type {null | Object} */ (null),
-    token: /** @type {null | string} */ (null),
     loading: false,
     error: '',
     booted: false,
+    sessionChecked: false,
   }),
 
   getters: {
@@ -21,16 +24,13 @@ export const useAuthStore = defineStore('auth', {
   },
 
   actions: {
-    /** Called once from main.js before mount. Hydrates from localStorage. */
-    async boot() {
+    /** Called once from main.js before mount. Hydrates cached user (optional). */
+    boot() {
       if (this.booted) return;
       this.booted = true;
-
-      const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
       const userRaw = localStorage.getItem(STORAGE_KEYS.USER);
-      if (token && userRaw) {
+      if (userRaw) {
         try {
-          this.token = token;
           this.user = JSON.parse(userRaw);
           return;
         } catch {
@@ -48,13 +48,20 @@ export const useAuthStore = defineStore('auth', {
       try {
         const { data } = await authService.login(credentials);
         const payload = this._extractPayload(data);
-        this._persist(payload);
-        // Ensure fresh profile from server/cookies.
+        if (payload?.user) {
+          this.user = payload.user;
+          localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(this.user));
+        }
         await this.fetchMe();
         return payload;
       } catch (err) {
+        const code = err?.response?.data?.error?.code || '';
+        if (code === 'account_inactive') {
+          this.error = 'حسابك قيد التفعيل من الإدارة. سيتم إشعارك فور تفعيله.';
+          throw err;
+        }
         this.error =
-          err.response?.data?.error?.message || err.response?.data?.message || 'فشل تسجيل الدخول';
+          err?.response?.data?.error?.message || err?.response?.data?.message || 'فشل تسجيل الدخول';
         throw err;
       } finally {
         this.loading = false;
@@ -67,12 +74,14 @@ export const useAuthStore = defineStore('auth', {
       try {
         const { data } = await authService.register(payload);
         const normalized = this._extractPayload(data);
-        // Register endpoint may return only user (no login session).
-        if (normalized?.user) this.user = normalized.user;
+        if (normalized?.user) {
+          this.user = normalized.user;
+          localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(this.user));
+        }
         return normalized;
       } catch (err) {
         this.error =
-          err.response?.data?.error?.message || err.response?.data?.message || 'فشل إنشاء الحساب';
+          err?.response?.data?.error?.message || err?.response?.data?.message || 'فشل إنشاء الحساب';
         throw err;
       } finally {
         this.loading = false;
@@ -84,16 +93,20 @@ export const useAuthStore = defineStore('auth', {
         const { data } = await authService.me();
         const payload = this._extractPayload(data);
         this.user = payload?.user || null;
-        if (this.user) {
-          localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(this.user));
-        }
-      } catch {
-        // this.reset();
-              // Only clear credentials on auth failures, not transient errors
-       if (err.response?.status === 401 || err.response?.status === 403) {
-         this.reset();
-       }
+        if (this.user) localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(this.user));
+        if (!this.user) localStorage.removeItem(STORAGE_KEYS.USER);
+      } catch (err) {
+        const status = err?.response?.status;
+        if (status === 401 || status === 403) this.reset();
+      } finally {
+        this.sessionChecked = true;
       }
+    },
+
+    /** Ensures the current cookie session is validated exactly once. */
+    async ensureSession() {
+      if (this.sessionChecked) return;
+      await this.fetchMe();
     },
 
     async logout() {
@@ -108,31 +121,12 @@ export const useAuthStore = defineStore('auth', {
 
     reset() {
       this.user = null;
-      this.token = null;
       this.error = '';
-      localStorage.removeItem(STORAGE_KEYS.TOKEN);
       localStorage.removeItem(STORAGE_KEYS.USER);
-    },
-
-    _persist({ token, user }) {
-      this.token = token || null;
-      this.user = user || null;
-
-      if (this.token) {
-        localStorage.setItem(STORAGE_KEYS.TOKEN, this.token);
-      } else {
-        localStorage.removeItem(STORAGE_KEYS.TOKEN);
-      }
-
-      if (this.user) {
-        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(this.user));
-      } else {
-        localStorage.removeItem(STORAGE_KEYS.USER);
-      }
+      this.sessionChecked = false;
     },
 
     _extractPayload(responseBody) {
-      // API envelope: { success, data, error, meta }
       if (responseBody && typeof responseBody === 'object' && 'data' in responseBody) {
         return responseBody.data || {};
       }
