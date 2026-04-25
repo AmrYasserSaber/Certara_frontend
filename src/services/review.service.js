@@ -1,23 +1,12 @@
 import http from '@/utils/http';
 
-/**
- * DEV 3 — Review API.
- *   GET   /api/reviews/assigned
- *   GET   /api/reviews/{id}         (blind — no student PII)
- *   POST  /api/reviews/{id}/comment
- *   PUT   /api/reviews/{id}/decision
- */
-export default {
-  assigned() {
-    return http.get('/reviews/assigned');
-  },
-  get(researchId) {
-    return http.get(`/reviews/${researchId}`);
-  },
-  addComment(researchId, comment) {
-    return http.post(`/reviews/${researchId}/comment`, { comment });
-  },
-  submitDecision(researchId, decision, note = '') {
-    return http.put(`/reviews/${researchId}/decision`, { decision, note });
-  },
+export const reviewService = {
+  getAssigned: () => http.get('/reviews/assigned'),
+  getDetail: (researchId) => http.get(`/reviews/${researchId}`),
+  addComment: (researchId, commentText) =>
+    http.post(`/reviews/${researchId}/comment`, { comment_text: commentText }),
+  submitDecision: (researchId, decision, comment) =>
+    http.put(`/reviews/${researchId}/decision`, { decision, comment }),
 };
+
+export default reviewService;
