@@ -1,20 +1,524 @@
 <template>
-  <StubView
-    title="مراجعة بحث"
-    eyebrow="مراجعة"
-    :description="`نموذج المراجعة (مخفي الهوية) مع عرض الوثائق والتعليقات (ID: ${id}).`"
-    owner="DEV 3"
-    icon="fact_check"
-    :endpoints="[
-      'GET  /api/reviews/{id}',
-      'POST /api/reviews/{id}/comment',
-      'PUT  /api/reviews/{id}/decision',
-    ]"
-  />
+  <div class="review-page" dir="rtl">
+    <aside class="sidebar">
+      <div class="brand-block">
+        <h2>بوابة الباحثين IRB</h2>
+        <p>منظومة إدارة المراجعة المؤسسية</p>
+      </div>
+
+      <BaseButton variant="primary" icon-left="add" class="new-protocol-btn">
+        + بروتوكول جديد
+      </BaseButton>
+
+      <nav class="nav-list">
+        <a
+          v-for="item in sidebarItems"
+          :key="item.key"
+          href="#"
+          :class="{ active: item.key === activeSidebarKey }"
+        >
+          {{ item.label }}
+        </a>
+      </nav>
+    </aside>
+
+    <main class="content-area">
+      <header class="topbar">
+        <div class="top-icons">
+          <button class="icon-btn" type="button" aria-label="notifications">
+            <span class="material-symbols-outlined">notifications</span>
+          </button>
+          <button class="icon-btn" type="button" aria-label="account">
+            <span class="material-symbols-outlined">account_circle</span>
+          </button>
+        </div>
+
+        <span class="blind-badge">وضع الهوية المخفية نشط 🔒</span>
+      </header>
+
+      <section class="page-title">
+        <h1>مركز المراجعة العمياء</h1>
+      </section>
+
+      <section class="grid-layout">
+        <article class="detail-panel">
+          <template v-if="selectedResearch">
+            <div class="detail-header">
+              <div class="badges-row">
+                <span class="version-badge">V. 1.2</span>
+                <span class="protocol-badge">{{
+                  selectedResearch.serial_number || `PRT-${selectedResearch.id}`
+                }}</span>
+              </div>
+
+              <div class="header-actions">
+                <button class="icon-btn" type="button" @click="printView">
+                  <span class="material-symbols-outlined">print</span>
+                </button>
+                <button class="icon-btn" type="button" @click="downloadFirstDocument">
+                  <span class="material-symbols-outlined">download</span>
+                </button>
+              </div>
+            </div>
+
+            <h2 class="research-title">{{ selectedResearch.title }}</h2>
+
+            <section class="text-section">
+              <h3>1. ملخص البحث (Abstract)</h3>
+              <p>
+                هذا الملخص مخصص للمراجعة العمياء ويعرض وصفاً مختصراً لهدف الدراسة ومنهجها دون أي
+                بيانات تعريفية للطالب. الباحث الرئيسي:
+                {{ selectedResearch.principal_investigator || 'غير محدد' }}.
+              </p>
+            </section>
+
+            <section class="text-section">
+              <h3>2. المنهجية والأدوات (Methodology)</h3>
+              <p>
+                يوضح هذا القسم التصميم البحثي، أدوات القياس، وخطة التحليل الإحصائي بصورة عامة لضمان
+                تقييم علمي منصف. القسم العلمي: {{ selectedResearch.department || 'غير محدد' }}.
+              </p>
+            </section>
+
+            <section class="text-section">
+              <h3>تفاصيل العينة البيولوجية:</h3>
+              <p>
+                لا يحتوي العرض الحالي على بيانات شخصية، ويتم التركيز فقط على الجوانب العلمية
+                المرتبطة بالعينة وآلية اختيارها.
+              </p>
+            </section>
+
+            <ResearchDocumentList :documents="documents" />
+
+            <CommentThread :comments="comments" />
+
+            <CommentComposer :submit-action="submitComment" @comment-added="refreshDetail" />
+
+            <DecisionPanel
+              :submit-action="submitDecision"
+              @decision-submitted="onDecisionSubmitted"
+            />
+          </template>
+
+          <p v-else-if="loading" class="state-text">جاري تحميل بيانات البحث...</p>
+
+          <p v-else class="state-text">لا يوجد بحث مسند حالياً</p>
+        </article>
+
+        <aside class="list-panel">
+          <h3>الأبحاث المسندة</h3>
+
+          <p v-if="loading && !assignedReviews.length" class="state-text">جاري التحميل...</p>
+
+          <ul v-else class="research-list">
+            <li v-for="item in assignedReviews" :key="item.id">
+              <button
+                :class="['research-card', { active: Number(item.id) === Number(selectedId) }]"
+                type="button"
+                @click="selectResearch(item.id)"
+              >
+                <div class="card-head">
+                  <span class="card-date">{{ formatDate(item.created_at) }}</span>
+                  <span class="card-badge">{{ item.serial_number || `PRT-${item.id}` }}</span>
+                </div>
+                <strong class="card-title">{{ item.title }}</strong>
+                <span class="card-dept">🏛 {{ item.department || 'غير محدد' }}</span>
+              </button>
+            </li>
+          </ul>
+        </aside>
+      </section>
+    </main>
+  </div>
 </template>
 
 <script setup>
-import StubView from '@/components/shared/StubView.vue';
+import { computed, onMounted, ref } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import BaseButton from '@/components/shared/BaseButton.vue';
+import CommentComposer from '@/components/reviewer/CommentComposer.vue';
+import CommentThread from '@/components/reviewer/CommentThread.vue';
+import DecisionPanel from '@/components/reviewer/DecisionPanel.vue';
+import ResearchDocumentList from '@/components/reviewer/ResearchDocumentList.vue';
+import { useToast } from '@/composables/useToast';
+import { useReviewStore } from '@/stores/review.store';
 
-defineProps({ id: { type: [String, Number], required: true } });
+const router = useRouter();
+const route = useRoute();
+const toast = useToast();
+const reviewStore = useReviewStore();
+
+const selectedId = ref(null);
+const loading = computed(() => reviewStore.loading);
+
+const assignedReviews = computed(() => reviewStore.assignedReviews);
+const selectedReview = computed(() => reviewStore.currentReview);
+const selectedResearch = computed(() => selectedReview.value?.research || null);
+const documents = computed(() => selectedReview.value?.documents || []);
+const comments = computed(() => selectedReview.value?.comments || []);
+
+const sidebarItems = [
+  { key: 'overview', label: 'نظرة عامة' },
+  { key: 'blind-review', label: 'مركز المراجعة العمياء' },
+  { key: 'finance', label: 'السجل المالي' },
+  { key: 'archive', label: 'أرشيف البروتوكولات' },
+  { key: 'settings', label: 'إعدادات النظام' },
+];
+
+const activeSidebarKey = computed(() => {
+  if (route.path.startsWith('/reviewer')) return 'blind-review';
+  return 'overview';
+});
+
+onMounted(async () => {
+  try {
+    await reviewStore.fetchAssigned();
+    if (assignedReviews.value.length > 0) {
+      await selectResearch(assignedReviews.value[0].id);
+    }
+  } catch {
+    toast.error('تعذر تحميل قائمة الأبحاث المسندة');
+  }
+});
+
+async function selectResearch(researchId) {
+  selectedId.value = researchId;
+  try {
+    await reviewStore.fetchOne(researchId);
+  } catch {
+    toast.error('تعذر تحميل تفاصيل البحث');
+  }
+}
+
+async function refreshDetail() {
+  if (!selectedId.value) return;
+  await reviewStore.fetchOne(selectedId.value);
+}
+
+async function submitComment(text) {
+  if (!selectedId.value) return null;
+  const created = await reviewStore.addComment(selectedId.value, text);
+  toast.success('تم إضافة التعليق');
+  return created;
+}
+
+async function submitDecision(decision, comment) {
+  if (!selectedId.value) return;
+  await reviewStore.submitDecision(selectedId.value, decision, comment);
+}
+
+async function onDecisionSubmitted() {
+  await router.push('/reviewer/assigned');
+  if (assignedReviews.value.length > 0) {
+    await selectResearch(assignedReviews.value[0].id);
+  } else {
+    selectedId.value = null;
+  }
+}
+
+function printView() {
+  window.print();
+}
+
+function downloadFirstDocument() {
+  if (!documents.value.length) {
+    toast.info('لا يوجد مستندات للتنزيل');
+    return;
+  }
+
+  window.open(documents.value[0].file_path, '_blank', 'noopener,noreferrer');
+}
+
+function formatDate(value) {
+  if (!value) return '-';
+  return new Intl.DateTimeFormat('ar-EG', { dateStyle: 'medium' }).format(new Date(value));
+}
 </script>
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
+
+.review-page {
+  --color-navy: #0f1f2e;
+  --color-teal: #1a7a6e;
+  --color-gold: #c9a84c;
+  --color-amber: #f59e0b;
+  --color-danger: #dc2626;
+  --color-surface: #f8fafc;
+  --color-card: #ffffff;
+
+  min-height: 100vh;
+  background: radial-gradient(circle at top left, #eaf4f2 0, #f8fafc 45%, #f1f5f9 100%);
+  font-family: 'Cairo', 'Tahoma', sans-serif;
+  color: #0f172a;
+  text-align: right;
+}
+
+.sidebar {
+  position: fixed;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  width: 240px;
+  background: var(--color-navy);
+  color: #e2e8f0;
+  padding: 20px 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.brand-block h2 {
+  margin: 0;
+  font-size: 1.15rem;
+  color: #ffffff;
+}
+
+.brand-block p {
+  margin: 6px 0 0;
+  color: #94a3b8;
+  font-size: 0.85rem;
+}
+
+.new-protocol-btn {
+  background: #16a34a !important;
+  border-color: #16a34a !important;
+}
+
+.nav-list {
+  display: grid;
+  gap: 5px;
+}
+
+.nav-list a {
+  color: #cbd5e1;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 9px 10px;
+  transition: background 0.2s ease;
+}
+
+.nav-list a:hover {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-list a.active {
+  color: var(--color-gold);
+  border-right: 3px solid var(--color-gold);
+  background: rgba(201, 168, 76, 0.12);
+  font-weight: 700;
+}
+
+.content-area {
+  margin-right: 240px;
+  padding: 18px;
+}
+
+.topbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.top-icons {
+  display: flex;
+  gap: 8px;
+}
+
+.icon-btn {
+  width: 38px;
+  height: 38px;
+  border: 1px solid #dbe4ee;
+  border-radius: 10px;
+  background: #ffffff;
+  color: #334155;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+}
+
+.blind-badge {
+  background: #e0f2f1;
+  color: var(--color-teal);
+  padding: 8px 12px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.page-title h1 {
+  margin: 0 0 12px;
+  font-size: 2rem;
+  color: #0f1f2e;
+}
+
+.grid-layout {
+  display: grid;
+  grid-template-columns: 1.55fr 1fr;
+  gap: 14px;
+}
+
+.detail-panel,
+.list-panel {
+  background: var(--color-card);
+  border: 1px solid #dbe4ee;
+  border-radius: 16px;
+}
+
+.detail-panel {
+  padding: 16px;
+  display: grid;
+  gap: 12px;
+}
+
+.detail-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.badges-row {
+  display: flex;
+  gap: 8px;
+  align-items: center;
+}
+
+.version-badge {
+  background: #e2e8f0;
+  color: #334155;
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+}
+
+.protocol-badge {
+  background: #dcfce7;
+  color: var(--color-teal);
+  padding: 5px 9px;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.research-title {
+  margin: 0;
+  color: #0f1f2e;
+  font-size: 1.35rem;
+}
+
+.text-section {
+  border-left: 4px solid var(--color-gold);
+  padding: 8px 12px;
+  background: #f8fafc;
+  border-radius: 10px;
+}
+
+.text-section h3 {
+  margin: 0 0 8px;
+  color: #0f1f2e;
+}
+
+.text-section p {
+  margin: 0;
+  line-height: 1.9;
+  color: #334155;
+}
+
+.list-panel {
+  padding: 14px;
+  max-height: calc(100vh - 110px);
+  overflow: auto;
+}
+
+.list-panel h3 {
+  margin: 0 0 10px;
+}
+
+.research-list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 10px;
+}
+
+.research-card {
+  width: 100%;
+  border: 1px solid #dbe4ee;
+  border-radius: 12px;
+  background: #ffffff;
+  padding: 10px;
+  text-align: right;
+  display: grid;
+  gap: 8px;
+  cursor: pointer;
+}
+
+.research-card.active {
+  border-color: var(--color-gold);
+  box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.2);
+}
+
+.card-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card-date {
+  color: #64748b;
+  font-size: 0.82rem;
+}
+
+.card-badge {
+  background: #d1fae5;
+  color: var(--color-teal);
+  font-size: 0.8rem;
+  padding: 4px 8px;
+  border-radius: 999px;
+  font-weight: 700;
+}
+
+.card-title {
+  color: #0f1f2e;
+  line-height: 1.6;
+}
+
+.card-dept {
+  color: #475569;
+  font-size: 0.86rem;
+}
+
+.state-text {
+  margin: 0;
+  color: #64748b;
+}
+
+@media (max-width: 1200px) {
+  .grid-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .list-panel {
+    max-height: 420px;
+  }
+}
+
+@media (max-width: 900px) {
+  .sidebar {
+    width: 100%;
+    position: static;
+    height: auto;
+  }
+
+  .content-area {
+    margin-right: 0;
+  }
+}
+</style>
