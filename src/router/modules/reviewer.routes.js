@@ -1,18 +1,11 @@
-import { ROLES } from '@/utils/constants';
-
-/** DEV 3 — Reviewer (blind review) routes. */
 export default [
   {
     path: '/reviewer',
-    name: 'reviewer.dashboard',
-    component: () => import('@/views/reviewer/ReviewerDashboard.vue'),
-    meta: { roles: [ROLES.REVIEWER] },
+    redirect: '/reviewer/assigned',
   },
   {
-    path: '/reviewer/research/:id',
-    name: 'reviewer.research',
+    path: '/reviewer/assigned',
     component: () => import('@/views/reviewer/ReviewResearchView.vue'),
-    meta: { roles: [ROLES.REVIEWER] },
-    props: true,
+    meta: { requiresAuth: true, role: 'reviewer', roles: ['reviewer'] },
   },
 ];
