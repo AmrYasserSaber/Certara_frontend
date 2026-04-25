@@ -14,39 +14,11 @@
 
         <nav class="mt-4 flex-1 space-y-2 px-4">
           <router-link
-            class="flex items-center gap-3 rounded-sm px-4 py-3 text-slate-400 transition-all hover:translate-x-[-4px] hover:bg-[#0D6E6E]/30 hover:text-slate-100"
-            to="/manager"
-          >
-            <AppIcon name="dashboard" />
-            <span class="text-[15px]">لوحة التحكم</span>
-          </router-link>
-          <router-link
-            class="flex items-center gap-3 rounded-sm px-4 py-3 text-slate-400 transition-all hover:translate-x-[-4px] hover:bg-[#0D6E6E]/30 hover:text-slate-100"
-            to="/manager"
-          >
-            <AppIcon name="fact_check" />
-            <span class="text-[15px]">طلبات المراجعة</span>
-          </router-link>
-          <router-link
-            class="flex items-center gap-3 rounded-sm px-4 py-3 text-slate-400 transition-all hover:translate-x-[-4px] hover:bg-[#0D6E6E]/30 hover:text-slate-100"
-            to="/manager"
-          >
-            <AppIcon name="gavel" />
-            <span class="text-[15px]">القرارات النهائية</span>
-          </router-link>
-          <router-link
             class="flex items-center gap-3 rounded-sm bg-[#0D6E6E] px-4 py-3 font-bold text-white shadow-inner"
-            to="/manager/research/preview"
-          >
-            <AppIcon name="verified" :filled="true" />
-            <span class="text-[15px]">الشهادات المصدرة</span>
-          </router-link>
-          <router-link
-            class="flex items-center gap-3 rounded-sm px-4 py-3 text-slate-400 transition-all hover:translate-x-[-4px] hover:bg-[#0D6E6E]/30 hover:text-slate-100"
             to="/manager"
           >
-            <AppIcon name="analytics" />
-            <span class="text-[15px]">الإحصائيات المتقدمة</span>
+            <AppIcon name="dashboard" :filled="true" />
+            <span class="text-[15px]">لوحة التحكم</span>
           </router-link>
         </nav>
 
@@ -57,7 +29,7 @@
             @click="generateOrPrint"
           >
             <AppIcon :name="certificate ? 'download' : 'add_circle'" />
-            <span>{{ certificate ? 'Download PDF' : 'إصدار شهادة فورية' }}</span>
+            <span>{{ certificate ? 'تنزيل الشهادة (PDF)' : 'إصدار شهادة فورية' }}</span>
           </button>
           <div class="border-t border-white/10 pt-4">
             <button
@@ -359,7 +331,7 @@
                       @click="generateCertificate"
                     >
                       <AppIcon name="verified" :filled="true" />
-                      <span>Generate Official Certificate</span>
+                      <span>إصدار الشهادة الرسمية</span>
                     </button>
 
                     <button
@@ -369,7 +341,7 @@
                       @click="generateOrPrint"
                     >
                       <AppIcon name="download" />
-                      <span>Download PDF</span>
+                      <span>تنزيل الشهادة (PDF)</span>
                     </button>
                   </div>
 
@@ -635,6 +607,7 @@ function generateOrPrint() {
   }
 
   // The print view is the downloadable certificate.
+  toast.info('سيتم فتح نافذة الطباعة. اختر "حفظ كملف PDF" لتنزيل الشهادة.');
   window.print();
 }
 
