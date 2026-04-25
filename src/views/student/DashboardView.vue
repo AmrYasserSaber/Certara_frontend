@@ -25,19 +25,19 @@
       />
       <StatCard
         label="قيد المراجعة"
-        value="0"
+        :value="inReviewCount"
         icon="pending_actions"
         variant="info"
       />
       <StatCard
         label="موافقات"
-        value="0"
+        :value="approvedCount"
         icon="verified"
         variant="success"
       />
       <StatCard
         label="بانتظار إجراء"
-        value="0"
+        :value="needsActionCount"
         icon="warning"
         variant="warning"
       />
@@ -72,7 +72,7 @@
               عرض
             </BaseButton>
             <BaseButton
-              v-if="['DRAFT', 'REVISION_REQUESTED'].includes(row.status)"
+              v-if="['DRAFT', 'REVISION_REQUESTED'].includes(row.status?.toUpperCase())"
               variant="ghost"
               size="sm"
               icon-left="edit"
@@ -81,7 +81,7 @@
               تعديل
             </BaseButton>
             <BaseButton
-              v-if="row.status === 'AWAITING_PAYMENT_1' || row.status === 'AWAITING_PAYMENT_2'"
+              v-if="['AWAITING_PAYMENT_1', 'AWAITING_PAYMENT_2'].includes(row.status?.toUpperCase())"
               variant="outline"
               size="sm"
               icon-left="payments"
@@ -97,7 +97,7 @@
 </template>
 
 <script setup>
-import { onMounted } from 'vue';
+import { onMounted, computed } from 'vue';
 import AppShellLayout from '@/components/shared/AppShellLayout.vue';
 import SectionHeader from '@/components/shared/SectionHeader.vue';
 import BaseCard from '@/components/shared/BaseCard.vue';
@@ -109,6 +109,10 @@ import { useResearchStore } from '@/stores/research.store';
 import { formatDate } from '@/utils/helpers';
 
 const store = useResearchStore();
+
+const inReviewCount = computed(() => store.list.filter(r => ['in_review', 'manager_reviewing'].includes(r.status?.toLowerCase())).length);
+const approvedCount = computed(() => store.list.filter(r => r.status?.toLowerCase() === 'approved').length);
+const needsActionCount = computed(() => store.list.filter(r => ['draft', 'revision_requested', 'awaiting_payment_1', 'awaiting_payment_2', 'awaiting_sample_size'].includes(r.status?.toLowerCase())).length);
 
 const columns = [
   { key: 'title', label: 'عنوان البحث' },

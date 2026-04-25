@@ -29,7 +29,7 @@
       </router-link>
       
       <router-link
-        v-if="['DRAFT', 'REVISION_REQUESTED'].includes(research.status)"
+        v-if="['DRAFT', 'REVISION_REQUESTED'].includes(research.status?.toUpperCase())"
         :to="{ name: 'student.research.edit', params: { id: research.id } }"
       >
         <BaseButton variant="primary" size="sm" icon="edit">
@@ -38,7 +38,7 @@
       </router-link>
 
       <router-link
-        v-if="research.status === 'AWAITING_PAYMENT_1' || research.status === 'AWAITING_PAYMENT_2'"
+        v-if="['AWAITING_PAYMENT_1', 'AWAITING_PAYMENT_2'].includes(research.status?.toUpperCase())"
         :to="{ name: 'student.research.pay', params: { id: research.id } }"
       >
         <BaseButton variant="primary" size="sm" icon="payments">

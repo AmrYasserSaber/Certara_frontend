@@ -31,14 +31,14 @@
         <!-- Action Buttons -->
         <div class="flex gap-2">
           <router-link
-            v-if="['DRAFT', 'REVISION_REQUESTED'].includes(current.status)"
+            v-if="['DRAFT', 'REVISION_REQUESTED'].includes(current.status?.toUpperCase())"
             :to="{ name: 'student.research.edit', params: { id: current.id } }"
           >
             <BaseButton variant="primary" icon="edit">تعديل البحث</BaseButton>
           </router-link>
 
           <router-link
-            v-if="current.status === 'AWAITING_PAYMENT_1' || current.status === 'AWAITING_PAYMENT_2'"
+            v-if="['AWAITING_PAYMENT_1', 'AWAITING_PAYMENT_2'].includes(current.status?.toUpperCase())"
             :to="{ name: 'student.research.pay', params: { id: current.id } }"
           >
             <BaseButton variant="primary" icon="payments">إكمال الدفع</BaseButton>
