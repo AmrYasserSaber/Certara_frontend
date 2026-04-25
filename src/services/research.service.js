@@ -22,7 +22,7 @@ export default {
     return http.post('/research', payload);
   },
   update(id, payload) {
-    return http.put(`/research/${id}`, payload);
+    return http.patch(`/research/${id}`, payload);
   },
   remove(id) {
     return http.delete(`/research/${id}`);
