@@ -19,7 +19,7 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    isAuthenticated: (s) => !!s.user,
+    isAuthenticated: (s) => s.sessionChecked && !!s.user,
     role: (s) => s.user?.role || null,
   },
 
@@ -74,10 +74,11 @@ export const useAuthStore = defineStore('auth', {
       try {
         const { data } = await authService.register(payload);
         const normalized = this._extractPayload(data);
-        if (normalized?.user) {
-          this.user = normalized.user;
-          localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(this.user));
-        }
+        // Registration does NOT create a login session (no auth cookies).
+        // Keep the app unauthenticated; user must login after activation.
+        this.user = null;
+        localStorage.removeItem(STORAGE_KEYS.USER);
+        this.sessionChecked = false;
         return normalized;
       } catch (err) {
         this.error =
