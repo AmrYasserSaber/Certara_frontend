@@ -100,9 +100,7 @@ const page = ref(1);
 const limit = ref(20);
 const total = ref(0);
 
-const managerNavItems = [
-  { to: '/manager', label: 'لوحة التحكم', icon: 'dashboard' },
-];
+const managerNavItems = [{ to: '/manager', label: 'لوحة التحكم', icon: 'dashboard' }];
 
 const statsItems = computed(() => [
   {
@@ -150,7 +148,8 @@ async function loadQueue() {
   const res = await adminService.managerReviewed({ page: page.value, limit: limit.value });
   const payload = res?.data?.data || {};
   const items = payload.items || [];
-  queue.value = items.filter((item) => item.status === 'reviewer_approved');
+  const allowedStatuses = new Set(['reviewer_approved', 'manager_reviewing']);
+  queue.value = items.filter((item) => allowedStatuses.has(String(item?.status || '')));
   total.value = Number(res?.data?.meta?.total || payload.total || queue.value.length || 0);
 }
 

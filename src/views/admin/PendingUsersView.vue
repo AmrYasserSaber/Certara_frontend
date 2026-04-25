@@ -115,9 +115,20 @@ function setRejectReason(userId, value) {
 }
 
 function openIdModal(user) {
+  const frontPhoto = user?.identity_photos?.front;
+  const backPhoto = user?.identity_photos?.back;
+
   selectedIdentity.value = {
-    front: user?.identity_photos?.front || '',
-    back: user?.identity_photos?.back || '',
+    front:
+      (typeof frontPhoto === 'string' ? frontPhoto : '') ||
+      frontPhoto?.file_url ||
+      frontPhoto?.file_path ||
+      '',
+    back:
+      (typeof backPhoto === 'string' ? backPhoto : '') ||
+      backPhoto?.file_url ||
+      backPhoto?.file_path ||
+      '',
   };
   idModalOpen.value = true;
 }

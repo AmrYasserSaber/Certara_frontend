@@ -18,7 +18,7 @@ const http = axios.create({
   baseURL,
   withCredentials: true,
   timeout: 20_000,
-  withCredentials: true,
+  // withCredentials: true,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
@@ -62,12 +62,13 @@ async function showErrorToast(message) {
 
 http.interceptors.response.use(
   (response) => {
-    if (response?.config?.responseType === 'blob') return response;
-    const payload = response?.data;
-    if (!payload || typeof payload !== 'object') return response;
-    if (!('success' in payload) || !('data' in payload)) return response;
-    if (payload.success !== true) return response;
-    return { ...response, data: payload.data };
+    // if (response?.config?.responseType === 'blob') return response;
+    // const payload = response?.data;
+    // if (!payload || typeof payload !== 'object') return response;
+    // if (!('success' in payload) || !('data' in payload)) return response;
+    // if (payload.success !== true) return response;
+    // return { ...response, data: payload.data };
+    return response;
   },
   async (error) => {
     if (!error.response) {
