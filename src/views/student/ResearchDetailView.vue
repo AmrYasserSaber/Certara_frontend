@@ -180,6 +180,6 @@ function getDocumentTypeName(type) {
 }
 
 function getFileUrl(path) {
-  return `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/storage/${path}`;
+  return `${import.meta.env.VITE_API_BASE_URL.replace('/api', '')}/${path}`;
 }
 </script>
