@@ -13,8 +13,25 @@
           class="mb-6"
         />
 
+        <div v-if="fawryReference" class="p-8 text-center bg-surface-container-high rounded-xl border border-primary/20 shadow-sm mt-6">
+          <AppIcon name="receipt_long" size="xl" class="text-primary mb-4" />
+          <h3 class="text-2xl font-bold font-headline mb-2 text-on-surface">طلب الدفع قيد الانتظار</h3>
+          <p class="text-on-surface-variant mb-6 text-lg max-w-md mx-auto">
+            يرجى التوجه إلى أقرب منفذ فوري واستخدام الرقم المرجعي التالي لسداد الرسوم:
+          </p>
+          
+          <div class="bg-surface p-6 rounded-lg inline-block border-2 border-dashed border-primary mb-6">
+            <span class="text-4xl font-mono font-bold tracking-widest text-primary block">{{ fawryReference }}</span>
+          </div>
+          
+          <div class="flex justify-center gap-4">
+            <BaseButton variant="primary" to="/student">العودة للرئيسية</BaseButton>
+            <BaseButton variant="outline" :to="{ name: 'student.research.detail', params: { id: currentResearch.id } }">تفاصيل البحث</BaseButton>
+          </div>
+        </div>
+
         <PaymentForm
-          v-if="requiredPayment"
+          v-else-if="requiredPayment"
           :research-id="currentResearch.id"
           :serial-number="currentResearch.serial_number"
           :type="requiredPayment.type"
@@ -54,6 +71,7 @@ const store = useResearchStore();
 const router = useRouter();
 const processing = ref(false);
 const paymentError = ref('');
+const fawryReference = ref(null);
 
 const currentResearch = computed(() => store.current);
 
@@ -97,8 +115,13 @@ async function handlePayment(payload) {
     };
 
     const result = await store.submitPayment(props.id, requestPayload);
-    // Success -> redirect to receipt or back to research details
-    router.push({ name: 'student.research.receipt', params: { id: props.id }, query: { paymentId: result.payment?.id }});
+    
+    if (result && result.fawry_reference) {
+      fawryReference.value = result.fawry_reference;
+    } else {
+      // Direct redirect if no reference number or another method was used
+      router.push({ name: 'student.research.receipt', params: { id: props.id }, query: { paymentId: result.payment_id || result.payment?.id }});
+    }
   } catch (err) {
     paymentError.value = store.error || 'فشلت عملية الدفع. يرجى مراجعة البطاقة والمحاولة مرة أخرى.';
   } finally {
