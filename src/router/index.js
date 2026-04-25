@@ -4,6 +4,7 @@ import { useAuthStore } from '@/stores/auth.store';
 import { ROLE_HOME_ROUTE } from '@/utils/constants';
 
 import authRoutes from '@/router/modules/auth.routes';
+import marketingRoutes from '@/router/modules/marketing.routes';
 import studentRoutes from '@/router/modules/student.routes';
 import reviewerRoutes from '@/router/modules/reviewer.routes';
 import sampleSizeRoutes from '@/router/modules/sample-size.routes';
@@ -17,10 +18,11 @@ const routes = [
     name: 'root',
     redirect: () => {
       const auth = useAuthStore();
-      if (!auth.isAuthenticated) return '/login';
+      if (!auth.isAuthenticated) return '/landing';
       return ROLE_HOME_ROUTE[auth.user?.role] || '/login';
     },
   },
+  ...marketingRoutes,
   ...authRoutes,
   ...studentRoutes,
   ...reviewerRoutes,

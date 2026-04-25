@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { STORAGE_KEYS } from '@/utils/constants';
 
 /**
  * Shared Axios instance.
@@ -7,7 +6,8 @@ import { STORAGE_KEYS } from '@/utils/constants';
  *
  * Responsibilities:
  *  - prepend `VITE_API_BASE_URL`
- *  - attach `Authorization: Bearer <token>` from localStorage
+ *  - send HttpOnly cookies (access/refresh) via withCredentials
+ *  - attach CSRF header (X-CSRF-Token) from IRB_CSRF_TOKEN cookie for state-changing requests
  *  - on 401 → clear auth + redirect to /login
  *  - toast any 5xx (via lazy-loaded composable to avoid a cycle with pinia)
  */
@@ -18,18 +18,33 @@ const http = axios.create({
   baseURL,
   withCredentials: true,
   timeout: 20_000,
+  withCredentials: true,
   headers: {
     Accept: 'application/json',
     'Content-Type': 'application/json',
   },
 });
 
-// -------- Request: attach JWT ------------------------------------------------
+function readCookieValue(name) {
+  const value = `; ${document.cookie || ''}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length !== 2) return null;
+  return parts.pop().split(';').shift() || null;
+}
+
+function isStateChangingMethod(method) {
+  const m = String(method || 'GET').toUpperCase();
+  return ['POST', 'PUT', 'PATCH', 'DELETE'].includes(m);
+}
+
+// -------- Request: attach CSRF ----------------------------------------------
 http.interceptors.request.use((config) => {
-  const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
-  if (token) {
-    config.headers.Authorization = `Bearer ${token}`;
-  }
+  if (typeof document === 'undefined') return config;
+  if (!isStateChangingMethod(config.method)) return config;
+  const csrf = readCookieValue('IRB_CSRF_TOKEN');
+  if (!csrf) return config;
+  config.headers = config.headers || {};
+  config.headers['X-CSRF-Token'] = csrf;
   return config;
 });
 
@@ -46,7 +61,14 @@ async function showErrorToast(message) {
 }
 
 http.interceptors.response.use(
-  (response) => response,
+  (response) => {
+    if (response?.config?.responseType === 'blob') return response;
+    const payload = response?.data;
+    if (!payload || typeof payload !== 'object') return response;
+    if (!('success' in payload) || !('data' in payload)) return response;
+    if (payload.success !== true) return response;
+    return { ...response, data: payload.data };
+  },
   async (error) => {
     if (!error.response) {
       await showErrorToast('تعذر الاتصال بالخادم. يرجى التحقق من الشبكة.');
@@ -69,7 +91,6 @@ http.interceptors.response.use(
     if (status === 401 && !handling401) {
       handling401 = true;
       try {
-        localStorage.removeItem(STORAGE_KEYS.TOKEN);
         localStorage.removeItem(STORAGE_KEYS.USER);
         const { useAuthStore } = await import('@/stores/auth.store');
         useAuthStore().reset();

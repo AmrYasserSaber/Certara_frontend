@@ -101,7 +101,7 @@
                 v-model="form.phone"
                 label="رقم الهاتف"
                 icon-left="call"
-                placeholder="+20..."
+                placeholder="01xxxxxxxxx"
                 required
                 dir="ltr"
                 :error="errors.phone"
@@ -130,80 +130,29 @@
                 :error="errors.department"
               />
               <BaseInput
-                v-model="form.specialty"
+                v-model="form.specialization"
                 label="التخصص"
                 icon-left="workspace_premium"
                 required
-                :error="errors.specialty"
+                :error="errors.specialization"
                 class="md:col-span-2"
               />
               <FileUploader
-                v-model="form.id_photo_front"
+                v-model="form.id_front"
                 label="صورة البطاقة (الوجه)"
                 icon="badge"
-                accept="image/png,image/jpeg,image/webp,application/pdf"
+                accept="image/png,image/jpeg"
                 :max-size-mb="5"
                 required
               />
               <FileUploader
-                v-model="form.id_photo_back"
+                v-model="form.id_back"
                 label="صورة البطاقة (الظهر)"
                 icon="badge"
-                accept="image/png,image/jpeg,image/webp,application/pdf"
+                accept="image/png,image/jpeg"
                 :max-size-mb="5"
                 required
               />
-            </section>
-
-            <!-- Step 3: Research -->
-            <section
-              v-if="currentStep === 2"
-              class="space-y-5"
-            >
-              <BaseInput
-                v-model="form.research_title"
-                label="عنوان البحث"
-                icon-left="description"
-                required
-                :error="errors.research_title"
-              />
-              <BaseInput
-                v-model="form.principal_investigator"
-                label="اسم الباحث الرئيسي"
-                icon-left="person"
-                required
-                :error="errors.principal_investigator"
-              />
-              <BaseTextarea
-                v-model="form.co_investigators"
-                label="المشاركون في البحث"
-                placeholder="أدخل أسماء المشاركين، اسم لكل سطر"
-                rows="4"
-                :error="errors.co_investigators"
-                hint="سيتم حفظ القيم مفصولة بفواصل"
-              />
-              <BaseCheckbox
-                v-model="form.agree"
-                :error="errors.agree"
-              >
-                <span>
-                  أقر بأن البيانات المقدمة صحيحة وأوافق على
-                  <a
-                    href="#"
-                    class="text-primary font-bold hover:underline"
-                  >الشروط والأحكام</a>
-                </span>
-              </BaseCheckbox>
-              <p
-                v-if="errors.agree"
-                class="form-error"
-              >
-                <AppIcon
-                  name="error"
-                  size="xs"
-                />
-                <span>{{ errors.agree }}</span>
-              </p>
             </section>
 
             <!-- Footer actions -->
@@ -244,9 +193,7 @@ import { useRouter } from 'vue-router';
 import AppIcon from '@/components/shared/AppIcon.vue';
 import BaseInput from '@/components/shared/BaseInput.vue';
 import BaseSelect from '@/components/shared/BaseSelect.vue';
-import BaseTextarea from '@/components/shared/BaseTextarea.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
-import BaseCheckbox from '@/components/shared/BaseCheckbox.vue';
 import FormStepper from '@/components/shared/FormStepper.vue';
 import FileUploader from '@/components/shared/FileUploader.vue';
 import SectionHeader from '@/components/shared/SectionHeader.vue';
@@ -257,7 +204,6 @@ import { ROLE_HOME_ROUTE } from '@/utils/constants';
 const steps = [
   { key: 'basic', label: 'البيانات الأساسية' },
   { key: 'docs', label: 'بيانات الكلية' },
-  { key: 'research', label: 'معلومات البحث' },
 ];
 
 const FACULTIES = [
@@ -278,13 +224,9 @@ const form = reactive({
   phone: '',
   faculty: '',
   department: '',
-  specialty: '',
-  id_photo_front: null,
-  id_photo_back: null,
-  research_title: '',
-  principal_investigator: '',
-  co_investigators: '',
-  agree: false,
+  specialization: '',
+  id_front: null,
+  id_back: null,
 });
 
 const errors = reactive({});
@@ -319,29 +261,24 @@ function validateStep() {
     if (form.national_id && !/^\d{14}$/.test(form.national_id))
       errors.national_id = 'رقم البطاقة يجب أن يكون 14 رقمًا';
     req('phone', 'رقم الهاتف مطلوب');
+    if (form.phone && !/^01[0-2,5][0-9]{8}$/.test(form.phone)) errors.phone = 'رقم الهاتف غير صحيح';
     ok =
       ok &&
       !errors.email &&
       !errors.password &&
       !errors.password_confirmation &&
-      !errors.national_id;
+      !errors.national_id &&
+      !errors.phone;
   } else if (currentStep.value === 1) {
     req('faculty', 'الكلية مطلوبة');
     req('department', 'القسم مطلوب');
-    req('specialty', 'التخصص مطلوب');
-    if (!form.id_photo_front) {
-      errors.id_photo_front = 'صورة البطاقة (الوجه) مطلوبة';
+    req('specialization', 'التخصص مطلوب');
+    if (!form.id_front) {
+      errors.id_front = 'صورة البطاقة (الوجه) مطلوبة';
       ok = false;
     }
-    if (!form.id_photo_back) {
-      errors.id_photo_back = 'صورة البطاقة (الظهر) مطلوبة';
-      ok = false;
-    }
-  } else if (currentStep.value === 2) {
-    req('research_title', 'عنوان البحث مطلوب');
-    req('principal_investigator', 'اسم الباحث الرئيسي مطلوب');
-    if (!form.agree) {
-      errors.agree = 'يجب الموافقة على الشروط قبل المتابعة';
+    if (!form.id_back) {
+      errors.id_back = 'صورة البطاقة (الظهر) مطلوبة';
       ok = false;
     }
   }

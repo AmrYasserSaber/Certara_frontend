@@ -172,7 +172,6 @@ export const ROLE_HOME_ROUTE = Object.freeze({
 
 /** LocalStorage keys for auth persistence. */
 export const STORAGE_KEYS = Object.freeze({
-  TOKEN: 'irb.auth.token',
   USER: 'irb.auth.user',
   LOCALE: 'irb.locale',
 });
