@@ -1,31 +1,6 @@
 <template>
-  <div class="sample-page" dir="rtl">
-    <aside class="sidebar">
-      <div class="logo-area">
-        <div class="logo-icon">
-          <span class="material-symbols-outlined">account_balance</span>
-        </div>
-        <h2>البوابة العلمية</h2>
-        <p>إدارة البحوث المؤسسية</p>
-      </div>
-
-      <nav class="nav-list">
-        <a
-          v-for="item in sidebarItems"
-          :key="item.key"
-          href="#"
-          :class="{ active: item.key === activeSidebarKey }"
-        >
-          {{ item.label }}
-        </a>
-      </nav>
-
-      <BaseButton variant="primary" icon-left="add" class="new-btn">
-        + بدء بروتوكول جديد
-      </BaseButton>
-    </aside>
-
-    <main class="content-area">
+  <AppShellLayout page-title="الأبحاث المعلقة" active-variant="teal">
+    <div class="sample-page" dir="rtl">
       <header class="stats-bar">
         <div class="crumbs">IRB-SYS &gt; W-QUEUE-08</div>
 
@@ -71,19 +46,17 @@
           />
         </div>
       </section>
-    </main>
-  </div>
+    </div>
+  </AppShellLayout>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import { useRoute } from 'vue-router';
-import BaseButton from '@/components/shared/BaseButton.vue';
+import AppShellLayout from '@/components/shared/AppShellLayout.vue';
 import PendingResearchCard from '@/components/sample-size/PendingResearchCard.vue';
 import { useToast } from '@/composables/useToast';
 import { sampleService } from '@/services/sample.service';
 
-const route = useRoute();
 const toast = useToast();
 
 const pendingRows = ref([]);
@@ -100,19 +73,6 @@ const highPriorityCount = computed(() => {
   const len = pendingRows.value.length;
   if (!len) return 0;
   return Math.max(1, Math.ceil(len * 0.2));
-});
-
-const sidebarItems = [
-  { key: 'dashboard', label: 'لوحة القيادة' },
-  { key: 'sample-management', label: 'إدارة العينات' },
-  { key: 'committee-review', label: 'مراجعة اللجنة' },
-  { key: 'certificates', label: 'إصدار الشهادات' },
-  { key: 'archive', label: 'الأرشيف' },
-];
-
-const activeSidebarKey = computed(() => {
-  if (route.path.startsWith('/sample-size')) return 'sample-management';
-  return 'dashboard';
 });
 
 async function fetchPending() {
@@ -152,98 +112,15 @@ function openProtocol(item) {
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
 .sample-page {
-  --color-navy: #1a2332;
-  --color-teal: #1a7a6e;
-  --color-gold: #c9a84c;
-  --color-amber: #f59e0b;
-  --color-danger: #dc2626;
-  --color-surface: #f8fafc;
-  --color-card: #ffffff;
-
-  min-height: 100vh;
   background: radial-gradient(circle at 20% 0, #e8edf5 0, #f8fafc 42%, #eef2f7 100%);
   font-family: 'Cairo', 'Tahoma', sans-serif;
   color: #0f172a;
   text-align: right;
-}
-
-.sidebar {
-  position: fixed;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 240px;
-  background: var(--color-navy);
-  color: #e2e8f0;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  padding: 16px 12px;
-}
-
-.logo-area {
-  text-align: right;
-}
-
-.logo-icon {
-  width: 42px;
-  height: 42px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 8px;
-}
-
-.logo-area h2 {
-  margin: 0;
-  color: #ffffff;
-  font-size: 1.08rem;
-}
-
-.logo-area p {
-  margin: 5px 0 0;
-  color: #94a3b8;
-  font-size: 0.85rem;
-}
-
-.nav-list {
-  display: grid;
-  gap: 5px;
-}
-
-.nav-list a {
-  color: #cbd5e1;
-  text-decoration: none;
-  padding: 8px 10px;
-  border-radius: 10px;
-}
-
-.nav-list a:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.nav-list a.active {
-  color: var(--color-gold);
-  border-right: 3px solid var(--color-gold);
-  background: rgba(201, 168, 76, 0.1);
-  font-weight: 700;
-}
-
-.new-btn {
-  margin-top: auto;
-  background: #16a34a !important;
-  border-color: #16a34a !important;
-}
-
-.content-area {
-  margin-right: 240px;
   padding: 18px;
 }
 
 .stats-bar {
-  background: var(--color-card);
+  background: #ffffff;
   border: 1px solid #dbe4ee;
   border-radius: 14px;
   padding: 14px;
@@ -279,11 +156,11 @@ function openProtocol(item) {
 }
 
 .stat.danger strong {
-  color: var(--color-amber);
+  color: #f59e0b;
 }
 
 .panel {
-  background: var(--color-card);
+  background: #ffffff;
   border: 1px solid #dbe4ee;
   border-radius: 14px;
   padding: 14px;
@@ -318,16 +195,6 @@ function openProtocol(item) {
 }
 
 @media (max-width: 980px) {
-  .sidebar {
-    width: 100%;
-    position: static;
-    height: auto;
-  }
-
-  .content-area {
-    margin-right: 0;
-  }
-
   .stats-bar {
     flex-direction: column;
     align-items: flex-start;

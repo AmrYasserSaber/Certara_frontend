@@ -1,44 +1,7 @@
 <template>
-  <div class="review-page" dir="rtl">
-    <aside class="sidebar">
-      <div class="brand-block">
-        <h2>بوابة الباحثين IRB</h2>
-        <p>منظومة إدارة المراجعة المؤسسية</p>
-      </div>
-
-      <BaseButton variant="primary" icon-left="add" class="new-protocol-btn">
-        + بروتوكول جديد
-      </BaseButton>
-
-      <nav class="nav-list">
-        <a
-          v-for="item in sidebarItems"
-          :key="item.key"
-          href="#"
-          :class="{ active: item.key === activeSidebarKey }"
-        >
-          {{ item.label }}
-        </a>
-      </nav>
-    </aside>
-
-    <main class="content-area">
-      <header class="topbar">
-        <div class="top-icons">
-          <button class="icon-btn" type="button" aria-label="notifications">
-            <span class="material-symbols-outlined">notifications</span>
-          </button>
-          <button class="icon-btn" type="button" aria-label="account">
-            <span class="material-symbols-outlined">account_circle</span>
-          </button>
-        </div>
-
-        <span class="blind-badge">وضع الهوية المخفية نشط 🔒</span>
-      </header>
-
-      <section class="page-title">
-        <h1>مركز المراجعة العمياء</h1>
-      </section>
+  <AppShellLayout page-title="مركز المراجعة العمياء" active-variant="gold">
+    <div dir="rtl" class="space-y-4">
+      <span class="blind-badge">وضع الهوية المخفية نشط 🔒</span>
 
       <section class="grid-layout">
         <article class="detail-panel">
@@ -128,14 +91,14 @@
           </ul>
         </aside>
       </section>
-    </main>
-  </div>
+    </div>
+  </AppShellLayout>
 </template>
 
 <script setup>
 import { computed, onMounted, ref } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
-import BaseButton from '@/components/shared/BaseButton.vue';
+import { useRouter } from 'vue-router';
+import AppShellLayout from '@/components/shared/AppShellLayout.vue';
 import CommentComposer from '@/components/reviewer/CommentComposer.vue';
 import CommentThread from '@/components/reviewer/CommentThread.vue';
 import DecisionPanel from '@/components/reviewer/DecisionPanel.vue';
@@ -144,7 +107,6 @@ import { useToast } from '@/composables/useToast';
 import { useReviewStore } from '@/stores/review.store';
 
 const router = useRouter();
-const route = useRoute();
 const toast = useToast();
 const reviewStore = useReviewStore();
 
@@ -156,19 +118,6 @@ const selectedReview = computed(() => reviewStore.currentReview);
 const selectedResearch = computed(() => selectedReview.value?.research || null);
 const documents = computed(() => selectedReview.value?.documents || []);
 const comments = computed(() => selectedReview.value?.comments || []);
-
-const sidebarItems = [
-  { key: 'overview', label: 'نظرة عامة' },
-  { key: 'blind-review', label: 'مركز المراجعة العمياء' },
-  { key: 'finance', label: 'السجل المالي' },
-  { key: 'archive', label: 'أرشيف البروتوكولات' },
-  { key: 'settings', label: 'إعدادات النظام' },
-];
-
-const activeSidebarKey = computed(() => {
-  if (route.path.startsWith('/reviewer')) return 'blind-review';
-  return 'overview';
-});
 
 onMounted(async () => {
   try {
@@ -238,94 +187,6 @@ function formatDate(value) {
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800&display=swap');
 
-.review-page {
-  --color-navy: #0f1f2e;
-  --color-teal: #1a7a6e;
-  --color-gold: #c9a84c;
-  --color-amber: #f59e0b;
-  --color-danger: #dc2626;
-  --color-surface: #f8fafc;
-  --color-card: #ffffff;
-
-  min-height: 100vh;
-  background: radial-gradient(circle at top left, #eaf4f2 0, #f8fafc 45%, #f1f5f9 100%);
-  font-family: 'Cairo', 'Tahoma', sans-serif;
-  color: #0f172a;
-  text-align: right;
-}
-
-.sidebar {
-  position: fixed;
-  right: 0;
-  top: 0;
-  bottom: 0;
-  width: 240px;
-  background: var(--color-navy);
-  color: #e2e8f0;
-  padding: 20px 14px;
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-}
-
-.brand-block h2 {
-  margin: 0;
-  font-size: 1.15rem;
-  color: #ffffff;
-}
-
-.brand-block p {
-  margin: 6px 0 0;
-  color: #94a3b8;
-  font-size: 0.85rem;
-}
-
-.new-protocol-btn {
-  background: #16a34a !important;
-  border-color: #16a34a !important;
-}
-
-.nav-list {
-  display: grid;
-  gap: 5px;
-}
-
-.nav-list a {
-  color: #cbd5e1;
-  text-decoration: none;
-  border-radius: 10px;
-  padding: 9px 10px;
-  transition: background 0.2s ease;
-}
-
-.nav-list a:hover {
-  background: rgba(255, 255, 255, 0.08);
-}
-
-.nav-list a.active {
-  color: var(--color-gold);
-  border-right: 3px solid var(--color-gold);
-  background: rgba(201, 168, 76, 0.12);
-  font-weight: 700;
-}
-
-.content-area {
-  margin-right: 240px;
-  padding: 18px;
-}
-
-.topbar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 12px;
-}
-
-.top-icons {
-  display: flex;
-  gap: 8px;
-}
-
 .icon-btn {
   width: 38px;
   height: 38px;
@@ -341,16 +202,11 @@ function formatDate(value) {
 
 .blind-badge {
   background: #e0f2f1;
-  color: var(--color-teal);
+  color: #1a7a6e;
   padding: 8px 12px;
   border-radius: 999px;
   font-weight: 700;
-}
-
-.page-title h1 {
-  margin: 0 0 12px;
-  font-size: 2rem;
-  color: #0f1f2e;
+  display: inline-flex;
 }
 
 .grid-layout {
@@ -361,7 +217,7 @@ function formatDate(value) {
 
 .detail-panel,
 .list-panel {
-  background: var(--color-card);
+  background: #ffffff;
   border: 1px solid #dbe4ee;
   border-radius: 16px;
 }
@@ -394,7 +250,7 @@ function formatDate(value) {
 
 .protocol-badge {
   background: #dcfce7;
-  color: var(--color-teal);
+  color: #1a7a6e;
   padding: 5px 9px;
   border-radius: 999px;
   font-size: 0.82rem;
@@ -413,7 +269,7 @@ function formatDate(value) {
 }
 
 .text-section {
-  border-left: 4px solid var(--color-gold);
+  border-left: 4px solid #c9a84c;
   padding: 8px 12px;
   background: #f8fafc;
   border-radius: 10px;
@@ -461,7 +317,7 @@ function formatDate(value) {
 }
 
 .research-card.active {
-  border-color: var(--color-gold);
+  border-color: #c9a84c;
   box-shadow: 0 0 0 2px rgba(201, 168, 76, 0.2);
 }
 
@@ -478,7 +334,7 @@ function formatDate(value) {
 
 .card-badge {
   background: #d1fae5;
-  color: var(--color-teal);
+  color: #1a7a6e;
   font-size: 0.8rem;
   padding: 4px 8px;
   border-radius: 999px;
@@ -507,18 +363,6 @@ function formatDate(value) {
 
   .list-panel {
     max-height: 420px;
-  }
-}
-
-@media (max-width: 900px) {
-  .sidebar {
-    width: 100%;
-    position: static;
-    height: auto;
-  }
-
-  .content-area {
-    margin-right: 0;
   }
 }
 </style>
