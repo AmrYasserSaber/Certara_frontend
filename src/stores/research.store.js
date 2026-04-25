@@ -23,8 +23,8 @@ export const useResearchStore = defineStore('research', {
     async fetchList(params = {}) {
       this.loading = true;
       try {
-        const { data } = await researchService.list(params);
-        this.list = Array.isArray(data) ? data : (data?.items ?? []);
+        const { data: body } = await researchService.list(params);
+        this.list = body?.data ?? (Array.isArray(body) ? body : []);
       } catch (err) {
         this.error = err.response?.data?.message || 'تعذر تحميل الأبحاث';
       } finally {
@@ -35,8 +35,8 @@ export const useResearchStore = defineStore('research', {
     async fetchOne(id) {
       this.loading = true;
       try {
-        const { data } = await researchService.get(id);
-        this.current = data?.research || data;
+        const { data: body } = await researchService.get(id);
+        this.current = body?.data || body?.research || body;
         return this.current;
       } catch (err) {
         this.error = err.response?.data?.message || 'تعذر تحميل البحث';
@@ -49,8 +49,8 @@ export const useResearchStore = defineStore('research', {
     async create(payload) {
       this.saving = true;
       try {
-        const { data } = await researchService.create(payload);
-        this.current = data?.research || data;
+        const { data: body } = await researchService.create(payload);
+        this.current = body?.data || body?.research || body;
         return this.current;
       } finally {
         this.saving = false;
@@ -60,8 +60,8 @@ export const useResearchStore = defineStore('research', {
     async update(id, payload) {
       this.saving = true;
       try {
-        const { data } = await researchService.update(id, payload);
-        this.current = data?.research || data;
+        const { data: body } = await researchService.update(id, payload);
+        this.current = body?.data || body?.research || body;
         return this.current;
       } finally {
         this.saving = false;
