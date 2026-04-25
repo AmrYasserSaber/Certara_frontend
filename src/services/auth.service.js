@@ -16,21 +16,22 @@ export default {
   register(payload) {
     if (payload instanceof FormData) {
       return http.post('/auth/register', payload, {
+        withCredentials: true,
         headers: { 'Content-Type': 'multipart/form-data' },
       });
     }
-    return http.post('/auth/register', payload);
+    return http.post('/auth/register', payload, { withCredentials: true });
   },
 
   login(credentials) {
-    return http.post('/auth/login', credentials);
+    return http.post('/auth/login', credentials, { withCredentials: true });
   },
 
   logout() {
-    return http.post('/auth/logout');
+    return http.post('/auth/logout', {}, { withCredentials: true });
   },
 
   me() {
-    return http.get('/auth/me');
+    return http.get('/auth/me', { withCredentials: true });
   },
 };

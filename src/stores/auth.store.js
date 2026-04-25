@@ -16,25 +16,30 @@ export const useAuthStore = defineStore('auth', {
   }),
 
   getters: {
-    isAuthenticated: (s) => !!s.token && !!s.user,
+    isAuthenticated: (s) => !!s.user,
     role: (s) => s.user?.role || null,
   },
 
   actions: {
     /** Called once from main.js before mount. Hydrates from localStorage. */
-    boot() {
+    async boot() {
       if (this.booted) return;
       this.booted = true;
+
       const token = localStorage.getItem(STORAGE_KEYS.TOKEN);
       const userRaw = localStorage.getItem(STORAGE_KEYS.USER);
       if (token && userRaw) {
         try {
           this.token = token;
           this.user = JSON.parse(userRaw);
+          return;
         } catch {
           this.reset();
         }
       }
+
+      // Cookie-based auth fallback: restore session from backend cookies.
+      // await this.fetchMe();
     },
 
     async login(credentials) {
@@ -42,10 +47,14 @@ export const useAuthStore = defineStore('auth', {
       this.error = '';
       try {
         const { data } = await authService.login(credentials);
-        this._persist(data);
-        return data;
+        const payload = this._extractPayload(data);
+        this._persist(payload);
+        // Ensure fresh profile from server/cookies.
+        await this.fetchMe();
+        return payload;
       } catch (err) {
-        this.error = err.response?.data?.message || 'فشل تسجيل الدخول';
+        this.error =
+          err.response?.data?.error?.message || err.response?.data?.message || 'فشل تسجيل الدخول';
         throw err;
       } finally {
         this.loading = false;
@@ -57,12 +66,13 @@ export const useAuthStore = defineStore('auth', {
       this.error = '';
       try {
         const { data } = await authService.register(payload);
-        if (data?.token && data?.user) {
-          this._persist(data);
-        }
-        return data;
+        const normalized = this._extractPayload(data);
+        // Register endpoint may return only user (no login session).
+        if (normalized?.user) this.user = normalized.user;
+        return normalized;
       } catch (err) {
-        this.error = err.response?.data?.message || 'فشل إنشاء الحساب';
+        this.error =
+          err.response?.data?.error?.message || err.response?.data?.message || 'فشل إنشاء الحساب';
         throw err;
       } finally {
         this.loading = false;
@@ -72,10 +82,17 @@ export const useAuthStore = defineStore('auth', {
     async fetchMe() {
       try {
         const { data } = await authService.me();
-        this.user = data?.user || data;
-        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(this.user));
+        const payload = this._extractPayload(data);
+        this.user = payload?.user || null;
+        if (this.user) {
+          localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(this.user));
+        }
       } catch {
-        this.reset();
+        // this.reset();
+              // Only clear credentials on auth failures, not transient errors
+       if (err.response?.status === 401 || err.response?.status === 403) {
+         this.reset();
+       }
       }
     },
 
@@ -98,10 +115,28 @@ export const useAuthStore = defineStore('auth', {
     },
 
     _persist({ token, user }) {
-      this.token = token;
-      this.user = user;
-      localStorage.setItem(STORAGE_KEYS.TOKEN, token);
-      localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(user));
+      this.token = token || null;
+      this.user = user || null;
+
+      if (this.token) {
+        localStorage.setItem(STORAGE_KEYS.TOKEN, this.token);
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.TOKEN);
+      }
+
+      if (this.user) {
+        localStorage.setItem(STORAGE_KEYS.USER, JSON.stringify(this.user));
+      } else {
+        localStorage.removeItem(STORAGE_KEYS.USER);
+      }
+    },
+
+    _extractPayload(responseBody) {
+      // API envelope: { success, data, error, meta }
+      if (responseBody && typeof responseBody === 'object' && 'data' in responseBody) {
+        return responseBody.data || {};
+      }
+      return responseBody || {};
     },
   },
 });

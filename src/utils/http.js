@@ -16,9 +16,11 @@ const baseURL = import.meta.env.VITE_API_BASE_URL || '/api';
 
 const http = axios.create({
   baseURL,
+  withCredentials: true,
   timeout: 20_000,
   headers: {
     Accept: 'application/json',
+    'Content-Type': 'application/json',
   },
 });
 
@@ -52,6 +54,17 @@ http.interceptors.response.use(
     }
 
     const status = error.response.status;
+
+    // Log all errors to console for debugging
+    if (status === 422 || status >= 400) {
+      // console.error(`HTTP ${status} Error:`, {
+      //   url: error.config?.url,
+      //   method: error.config?.method,
+      //   data: error.config?.data,
+      //   headers: error.config?.headers,
+      //   response: error.response?.data,
+      // });
+    }
 
     if (status === 401 && !handling401) {
       handling401 = true;
