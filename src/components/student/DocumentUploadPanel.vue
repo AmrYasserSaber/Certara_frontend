@@ -13,7 +13,8 @@
         label="البروتوكول البحثي"
         description="البروتوكول التفصيلي للبحث المراد إجراؤه"
         icon="article"
-        required
+        :required="isCreateMode"
+        :existing-file-name="existingFileNames.protocol"
       />
 
       <FileUploader
@@ -21,7 +22,8 @@
         label="نموذج التقديم"
         description="نموذج طلب الموافقة من لجنة الأخلاقيات (IRB)"
         icon="feed"
-        required
+        :required="isCreateMode"
+        :existing-file-name="existingFileNames.application"
       />
 
       <FileUploader
@@ -29,7 +31,8 @@
         label="إقرار تضارب المصالح"
         description="إقرار بعدم وجود تضارب مصالح (COI Form)"
         icon="gavel"
-        required
+        :required="isCreateMode"
+        :existing-file-name="existingFileNames.coi"
       />
 
       <FileUploader
@@ -37,7 +40,8 @@
         label="قائمة المراجعة"
         description="قائمة مراجعة المستندات المطلوبة (Checklist)"
         icon="fact_check"
-        required
+        :required="isCreateMode"
+        :existing-file-name="existingFileNames.checklist"
       />
 
       <FileUploader
@@ -45,21 +49,20 @@
         label="استمارة الموافقة المستنيرة"
         description="نموذج موافقة المريض إذا كان البحث يتطلب ذلك"
         icon="assignment_turned_in"
-        required
+        :required="isCreateMode"
+        :existing-file-name="existingFileNames.consent"
       />
     </div>
 
     <div class="flex justify-end gap-3 mt-8">
-      <BaseButton type="button" variant="outline" @click="$emit('back')">
-        عودة
-      </BaseButton>
+      <BaseButton type="button" variant="outline" @click="$emit('back')"> عودة </BaseButton>
       <BaseButton
         type="button"
         variant="primary"
         :disabled="!isValid"
         @click="$emit('submit', files)"
       >
-        مراجعة وتقديم
+        {{ isCreateMode ? 'مراجعة وتقديم' : 'حفظ المستندات' }}
       </BaseButton>
     </div>
   </div>
@@ -72,7 +75,15 @@ import FileUploader from '@/components/shared/FileUploader.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
 
 const props = defineProps({
+  mode: {
+    type: String,
+    default: 'create',
+  },
   initialFiles: {
+    type: Object,
+    default: () => ({}),
+  },
+  existingFileNames: {
     type: Object,
     default: () => ({}),
   },
@@ -88,17 +99,36 @@ const files = ref({
   consent: props.initialFiles.consent || null,
 });
 
-watch(() => props.initialFiles, (newVal) => {
-  if(newVal && Object.keys(newVal).length > 0) {
-    Object.assign(files.value, newVal);
-  }
-}, { deep: true });
+watch(
+  () => props.initialFiles,
+  (newVal) => {
+    if (newVal && Object.keys(newVal).length > 0) {
+      Object.assign(files.value, newVal);
+    }
+  },
+  { deep: true },
+);
+
+const isCreateMode = computed(() => props.mode === 'create');
+
+const existingFileNames = computed(() => ({
+  protocol: props.existingFileNames.protocol || '',
+  application: props.existingFileNames.application || '',
+  coi: props.existingFileNames.coi || '',
+  checklist: props.existingFileNames.checklist || '',
+  consent: props.existingFileNames.consent || '',
+}));
 
 const isValid = computed(() => {
-  return files.value.protocol &&
-         files.value.application &&
-         files.value.coi &&
-         files.value.checklist &&
-         files.value.consent;
+  if (!isCreateMode.value) {
+    return true;
+  }
+  return (
+    files.value.protocol &&
+    files.value.application &&
+    files.value.coi &&
+    files.value.checklist &&
+    files.value.consent
+  );
 });
 </script>

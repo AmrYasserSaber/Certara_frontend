@@ -13,29 +13,15 @@
     <div class="flex items-start justify-between gap-3 mb-3">
       <div class="min-w-0">
         <p class="font-headline font-bold text-on-background flex items-center gap-1.5">
-          <AppIcon
-            :name="icon"
-            :filled="true"
-            size="sm"
-            class="text-primary"
-          />
+          <AppIcon :name="icon" :filled="true" size="sm" class="text-primary" />
           {{ label }}
-          <span
-            v-if="required"
-            class="text-error mr-0.5"
-          >*</span>
+          <span v-if="required" class="text-error mr-0.5">*</span>
         </p>
-        <p
-          v-if="description"
-          class="text-xs text-on-surface-variant mt-1"
-        >
+        <p v-if="description" class="text-xs text-on-surface-variant mt-1">
           {{ description }}
         </p>
       </div>
-      <span
-        v-if="statusBadge"
-        :class="['badge', statusClass]"
-      >
+      <span v-if="statusBadge" :class="['badge', statusClass]">
         {{ statusBadge }}
       </span>
     </div>
@@ -47,13 +33,12 @@
       ]"
     >
       <template v-if="!file">
-        <AppIcon
-          name="cloud_upload"
-          size="xl"
-          class="text-on-surface-variant mx-auto block"
-        />
+        <AppIcon name="cloud_upload" size="xl" class="text-on-surface-variant mx-auto block" />
         <p class="text-sm text-on-surface-variant mt-2">
           اسحب الملف هنا أو <span class="text-primary font-bold">اختر من الجهاز</span>
+        </p>
+        <p v-if="hasExistingFileName" class="text-[12px] text-on-surface-variant mt-2">
+          الملف الحالي: <span class="font-mono font-bold">{{ existingFileName }}</span>
         </p>
         <p class="text-[11px] text-on-surface-variant/70 mt-1 font-mono">
           PDF — حتى {{ maxSizeMb }} ميجابايت
@@ -65,11 +50,7 @@
             <div
               class="w-10 h-10 rounded-lg bg-primary/10 text-primary flex items-center justify-center shrink-0"
             >
-              <AppIcon
-                name="picture_as_pdf"
-                :filled="true"
-                size="md"
-              />
+              <AppIcon name="picture_as_pdf" :filled="true" size="md" />
             </div>
             <div class="min-w-0">
               <p class="text-sm font-bold text-on-background truncate">
@@ -80,39 +61,19 @@
               </p>
             </div>
           </div>
-          <button
-            type="button"
-            class="btn-icon"
-            aria-label="remove"
-            @click.stop="clear"
-          >
-            <AppIcon
-              name="close"
-              size="sm"
-            />
+          <button type="button" class="btn-icon" aria-label="remove" @click.stop="clear">
+            <AppIcon name="close" size="sm" />
           </button>
         </div>
       </template>
     </div>
 
-    <p
-      v-if="error"
-      class="form-error mt-2"
-    >
-      <AppIcon
-        name="error"
-        size="xs"
-      />
+    <p v-if="error" class="form-error mt-2">
+      <AppIcon name="error" size="xs" />
       <span>{{ error }}</span>
     </p>
 
-    <input
-      ref="inputRef"
-      type="file"
-      class="hidden"
-      :accept="accept"
-      @change="onPick"
-    >
+    <input ref="inputRef" type="file" class="hidden" :accept="accept" @change="onPick" />
   </div>
 </template>
 
@@ -123,6 +84,7 @@ import { formatFileSize } from '@/utils/helpers';
 
 const props = defineProps({
   modelValue: { type: [File, Object, null], default: null },
+  existingFileName: { type: String, default: '' },
   label: { type: String, required: true },
   description: { type: String, default: '' },
   accept: { type: String, default: 'application/pdf' },
@@ -145,6 +107,7 @@ const error = ref('');
 
 const file = computed(() => props.modelValue);
 const sizeLabel = computed(() => (file.value ? formatFileSize(file.value.size) : ''));
+const hasExistingFileName = computed(() => props.existingFileName.trim() !== '');
 
 const statusClass = computed(
   () =>
