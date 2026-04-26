@@ -18,12 +18,7 @@
         <div
           class="w-24 h-24 mb-8 rounded-2xl bg-white/5 backdrop-blur-sm flex items-center justify-center"
         >
-          <AppIcon
-            name="biotech"
-            :filled="true"
-            size="2xl"
-            class="text-gold-accent"
-          />
+          <AppIcon name="biotech" :filled="true" size="2xl" class="text-gold-accent" />
         </div>
         <h1 class="font-headline text-4xl lg:text-5xl font-bold text-white mb-4 tracking-wide">
           نظام IRB الرقمي
@@ -35,11 +30,7 @@
           class="w-full rounded-xl bg-inverse-surface/40 border border-white/10 backdrop-blur-md p-8 space-y-4 text-right"
         >
           <h3 class="font-headline text-white font-bold flex items-center gap-2">
-            <AppIcon
-              name="shield_person"
-              size="md"
-              class="text-gold-accent"
-            />
+            <AppIcon name="shield_person" size="md" class="text-gold-accent" />
             مراجعة أخلاقية آمنة
           </h3>
           <p class="text-sm text-slate-300 leading-relaxed">
@@ -56,21 +47,12 @@
     >
       <div class="max-w-md w-full mx-auto space-y-8">
         <div class="lg:hidden flex flex-col items-center mb-6 text-center">
-          <AppIcon
-            name="biotech"
-            :filled="true"
-            size="xl"
-            class="text-primary-container mb-2"
-          />
-          <h1 class="font-headline text-2xl font-bold text-on-surface">
-            نظام IRB الرقمي
-          </h1>
+          <AppIcon name="biotech" :filled="true" size="xl" class="text-primary-container mb-2" />
+          <h1 class="font-headline text-2xl font-bold text-on-surface">نظام IRB الرقمي</h1>
         </div>
 
         <div>
-          <h2 class="font-headline text-3xl font-bold text-on-background mb-2">
-            مرحباً بك مجدداً
-          </h2>
+          <h2 class="font-headline text-3xl font-bold text-on-background mb-2">مرحباً بك مجدداً</h2>
           <p class="text-on-surface-variant text-[15px]">
             الرجاء إدخال بيانات الاعتماد للوصول إلى لوحة التحكم.
           </p>
@@ -80,20 +62,13 @@
           v-if="auth.error"
           class="flex items-start gap-3 p-4 rounded-lg bg-error-container text-on-error-container animate-fade-in"
         >
-          <AppIcon
-            name="error"
-            size="md"
-          />
+          <AppIcon name="error" size="md" />
           <p class="text-sm font-medium">
             {{ auth.error }}
           </p>
         </div>
 
-        <form
-          class="space-y-5"
-          novalidate
-          @submit.prevent="onSubmit"
-        >
+        <form class="space-y-5" novalidate @submit.prevent="onSubmit">
           <BaseInput
             v-model="form.email"
             label="البريد الإلكتروني"
@@ -121,10 +96,7 @@
           />
 
           <div class="flex justify-between items-center text-sm">
-            <BaseCheckbox
-              v-model="form.remember"
-              label="تذكرني"
-            />
+            <BaseCheckbox v-model="form.remember" label="تذكرني" />
             <a
               class="text-primary hover:text-primary-container font-bold transition-colors"
               href="#"
