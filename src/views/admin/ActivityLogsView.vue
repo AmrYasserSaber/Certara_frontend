@@ -13,7 +13,7 @@
           label="الإجراء"
           placeholder="مثال: admin.serial_generated"
         />
-        <BaseInput v-model="filters.target_type" label="نوع الهدف" placeholder="research / user" />
+        <BaseInput v-model="filters.target_type" label="نوع الهدف" placeholder="بحث / مستخدم" />
         <BaseInput v-model="filters.actor_id" label="رقم الفاعل" placeholder="مثال: 1" />
         <div class="flex items-end gap-2">
           <BaseButton variant="ghost" icon-left="restart_alt" @click="resetFilters">
@@ -26,11 +26,11 @@
 
     <BaseTable :columns="columns" :rows="logs" :loading="loading" empty-title="لا يوجد نشاط مطابق">
       <template #row="{ row }">
-        <td>{{ row.actor_name || `User #${row.actor_id || '-'}` }}</td>
-        <td class="font-mono text-xs">{{ row.action }}</td>
+        <td>{{ row.actor_name || `مستخدم #${row.actor_id || '-'}` }}</td>
+        <td class="text-sm">{{ ACTION_LABELS_AR[row.action] || row.action }}</td>
         <td>
           <div class="text-sm">
-            <p class="font-bold">{{ row.target_type || '—' }}</p>
+            <p class="font-bold">{{ TARGET_TYPE_LABELS_AR[row.target_type] || row.target_type || '—' }}</p>
             <p class="text-xs text-on-surface-variant font-mono">#{{ row.target_id || '—' }}</p>
           </div>
         </td>
@@ -60,6 +60,22 @@ import BasePagination from '@/components/shared/BasePagination.vue';
 import adminService from '@/services/admin.service';
 import { useToast } from '@/composables/useToast';
 import { formatDate } from '@/utils/helpers';
+const ACTION_LABELS_AR = {
+  'admin.user_activated': 'تفعيل مستخدم',
+  'admin.user_rejected': 'رفض مستخدم',
+  'admin.reviewer_assigned': 'تعيين مراجع',
+  'admin.serial_generated': 'توليد رقم تسلسلي',
+  'admin.research_pending_activation': 'بحث بانتظار التفعيل',
+  'manager.decision_recorded': 'تسجيل قرار المدير',
+  'manager.certificate_issued': 'إصدار شهادة',
+  'reviewer.decision_submitted': 'تقديم قرار المراجع',
+  'certificate.generated': 'إصدار شهادة',
+};
+
+const TARGET_TYPE_LABELS_AR = {
+  research: 'بحث',
+  user: 'مستخدم',
+};
 
 const toast = useToast();
 

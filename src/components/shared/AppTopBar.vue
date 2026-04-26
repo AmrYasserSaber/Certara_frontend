@@ -31,6 +31,7 @@
       <slot name="center" />
       <NotificationBell :dark="dark" />
       <button
+        v-if="showLanguage"
         type="button"
         :class="dark ? 'btn-icon-dark' : 'btn-icon'"
         aria-label="language"
@@ -82,6 +83,7 @@ defineProps({
     type: String,
     default: 'text-lg md:text-xl',
   },
+  showLanguage: { type: Boolean, default: true },
 });
 
 defineEmits(['toggle-sidebar', 'toggle-language', 'logout']);

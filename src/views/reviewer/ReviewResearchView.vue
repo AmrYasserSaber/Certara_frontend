@@ -8,7 +8,7 @@
           <template v-if="selectedResearch">
             <div class="detail-header">
               <div class="badges-row">
-                <span class="version-badge">V. 1.2</span>
+                <span class="version-badge">الإصدار 1.2</span>
                 <span class="protocol-badge">{{
                   selectedResearch.serial_number || `PRT-${selectedResearch.id}`
                 }}</span>
@@ -27,7 +27,7 @@
             <h2 class="research-title">{{ selectedResearch.title }}</h2>
 
             <section class="text-section">
-              <h3>1. ملخص البحث (Abstract)</h3>
+              <h3>1. ملخص البحث (الملخص)</h3>
               <p>
                 هذا الملخص مخصص للمراجعة العمياء ويعرض وصفاً مختصراً لهدف الدراسة ومنهجها دون أي
                 بيانات تعريفية للطالب. الباحث الرئيسي:
@@ -36,7 +36,7 @@
             </section>
 
             <section class="text-section">
-              <h3>2. المنهجية والأدوات (Methodology)</h3>
+              <h3>2. المنهجية والأدوات (المنهجية)</h3>
               <p>
                 يوضح هذا القسم التصميم البحثي، أدوات القياس، وخطة التحليل الإحصائي بصورة عامة لضمان
                 تقييم علمي منصف. القسم العلمي: {{ selectedResearch.department || 'غير محدد' }}.
@@ -280,7 +280,7 @@ function formatDate(value) {
 }
 
 .text-section {
-  border-left: 4px solid #c9a84c;
+  border-right: 4px solid #c9a84c;
   padding: 8px 12px;
   background: #f8fafc;
   border-radius: 10px;

@@ -15,7 +15,7 @@
       
       <div class="flex justify-between items-center py-4 mt-2">
         <span class="text-lg font-bold text-on-surface">الإجمالي المطلوب</span>
-        <span class="text-2xl font-bold font-mono text-primary">{{ amount }} EGP</span>
+        <span class="text-2xl font-bold font-mono text-primary">{{ amount }} ج.م</span>
       </div>
     </div>
 
@@ -53,7 +53,7 @@
       :loading="loading"
       :disabled="!paymentMethod"
     >
-      تأكيد الدفع ({{ amount }} EGP)
+      تأكيد الدفع ({{ amount }} ج.م)
     </BaseButton>
   </form>
 </template>

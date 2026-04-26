@@ -21,7 +21,7 @@
       empty-title="لا توجد أبحاث مطابقة"
     >
       <template #row="{ row }">
-        <td class="font-bold text-on-background max-w-[280px] truncate" :title="row.title">
+        <td class="text-xs font-bold text-on-background" :title="row.title">
           {{ row.title }}
         </td>
         <td>{{ row.student?.name || row.student_name || '—' }}</td>
@@ -36,15 +36,16 @@
               icon-left="visibility"
               :to="`/admin/research/${row.id}`"
             >
-              View Detail
+              عرض التفاصيل
             </BaseButton>
             <BaseButton
+              v-if="row.status === RESEARCH_STATUS.IN_REVIEW"
               variant="secondary"
               size="sm"
               icon-left="person_add"
               @click="openAssignModal(row)"
             >
-              Assign Reviewer
+              تعيين مراجع
             </BaseButton>
           </div>
         </td>

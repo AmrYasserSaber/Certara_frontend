@@ -36,7 +36,7 @@
       <div v-else>
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
           <!-- Right: avatar + name (as in screenshot) -->
-          <aside class="lg:col-span-4 lg:border-l lg:border-outline-variant/25 lg:pl-8">
+          <div class="lg:col-span-4 lg:border-l lg:border-outline-variant/25 lg:pl-8">
             <div class="text-right">
               <p class="font-headline font-extrabold text-on-background text-lg mb-4">
                 المعلومات الشخصية
@@ -87,7 +87,7 @@
                 {{ avatarError }}
               </p>
             </div>
-          </aside>
+          </div>
 
           <!-- Left: fields -->
           <section class="lg:col-span-8">

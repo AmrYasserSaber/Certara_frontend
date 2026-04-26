@@ -20,6 +20,7 @@
         :title="pageTitle"
         :user="topbarUser"
         :dark="darkTopbar"
+        :show-language="showLanguage"
         @toggle-sidebar="sidebarOpen = !sidebarOpen"
         @logout="onLogout"
       />
@@ -65,6 +66,10 @@ const topbarUser = computed(() =>
       }
     : null,
 );
+const showLanguage = computed(() => {
+  const role = auth.user?.role;
+  return role !== ROLES.ADMIN && role !== ROLES.MANAGER;
+});
 
 const navItems = computed(() => props.navItems ?? buildDefaultNav(auth.user?.role));
 const footerItems = computed(

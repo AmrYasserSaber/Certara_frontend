@@ -55,7 +55,7 @@ function resolveDownloadUrl(path) {
   border: 1px solid #e2e8f0;
   border-radius: 14px;
   padding: 14px;
-  text-align: left;
+  text-align: right;
 }
 
 .title {
