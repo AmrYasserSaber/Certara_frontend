@@ -105,6 +105,7 @@ import DecisionPanel from '@/components/reviewer/DecisionPanel.vue';
 import ResearchDocumentList from '@/components/reviewer/ResearchDocumentList.vue';
 import { useToast } from '@/composables/useToast';
 import { useReviewStore } from '@/stores/review.store';
+import researchService from '@/services/research.service';
 
 const router = useRouter();
 const toast = useToast();
@@ -171,22 +172,24 @@ function printView() {
   window.print();
 }
 
-function downloadFirstDocument() {
+async function downloadFirstDocument() {
   if (!documents.value.length) {
     toast.info('لا يوجد مستندات للتنزيل');
     return;
   }
 
-  window.open(resolveDownloadUrl(documents.value[0].file_path), '_blank', 'noopener,noreferrer');
-}
-
-function resolveDownloadUrl(path) {
-  if (!path) return '#';
-  if (/^https?:\/\//i.test(path)) return path;
-  const apiBase = import.meta.env.VITE_API_BASE_URL || '/api';
-  const host = apiBase.replace(/\/api\/?$/, '');
-  const cleanPath = String(path).replace(/^\/+/, '');
-  return `${host}/${cleanPath}`;
+  try {
+    const first = documents.value[0];
+    const response = await researchService.getDocumentSignedUrl(first.research_id, first.id);
+    const url = response?.data?.data?.url;
+    if (!url) {
+      toast.error('تعذر إنشاء رابط تنزيل للمستند');
+      return;
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
+  } catch (err) {
+    toast.error('تعذر تنزيل المستند حالياً');
+  }
 }
 
 function formatDate(value) {

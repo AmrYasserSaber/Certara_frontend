@@ -11,14 +11,22 @@
           <span class="type">{{ doc.type || 'document' }}</span>
         </div>
 
-        <a
-          :href="resolveDownloadUrl(doc.file_path)"
-          target="_blank"
-          rel="noopener noreferrer"
+        <button
+          type="button"
           class="download-link"
+          :disabled="isDownloadingByDocumentId[doc.id] === true"
+          @click="downloadDocument(doc)"
         >
-          <BaseButton variant="outline" size="sm" icon-left="download">تنزيل</BaseButton>
-        </a>
+          <BaseButton
+            variant="outline"
+            size="sm"
+            :icon-left="
+              isDownloadingByDocumentId[doc.id] === true ? 'progress_activity' : 'download'
+            "
+          >
+            {{ isDownloadingByDocumentId[doc.id] === true ? 'جاري التنزيل…' : 'تنزيل' }}
+          </BaseButton>
+        </button>
       </li>
     </ul>
   </section>
@@ -26,21 +34,41 @@
 
 <script setup>
 import BaseButton from '@/components/shared/BaseButton.vue';
+import researchService from '@/services/research.service';
+import { ref } from 'vue';
+import { useToast } from '@/composables/useToast';
 
-defineProps({
+const props = defineProps({
   documents: {
     type: Array,
     default: () => [],
   },
 });
 
-function resolveDownloadUrl(path) {
-  if (!path) return '#';
-  if (/^https?:\/\//i.test(path)) return path;
-  const apiBase = import.meta.env.VITE_API_BASE_URL || '/api';
-  const host = apiBase.replace(/\/api\/?$/, '');
-  const cleanPath = String(path).replace(/^\/+/, '');
-  return `${host}/${cleanPath}`;
+const toast = useToast();
+const isDownloadingByDocumentId = ref({});
+
+async function downloadDocument(doc) {
+  if (isDownloadingByDocumentId.value[doc.id] === true) return;
+  isDownloadingByDocumentId.value = { ...isDownloadingByDocumentId.value, [doc.id]: true };
+  try {
+    const researchId = doc.research_id || doc.researchId;
+    if (!researchId) {
+      toast.error('تعذر تحديد البحث المرتبط بهذا المستند');
+      return;
+    }
+    const response = await researchService.getDocumentSignedUrl(researchId, doc.id);
+    const url = response?.data?.data?.url;
+    if (!url) {
+      toast.error('تعذر إنشاء رابط تنزيل للمستند');
+      return;
+    }
+    window.open(url, '_blank', 'noopener,noreferrer');
+  } catch (err) {
+    toast.error('تعذر تنزيل المستند حالياً');
+  } finally {
+    isDownloadingByDocumentId.value = { ...isDownloadingByDocumentId.value, [doc.id]: false };
+  }
 }
 </script>
 

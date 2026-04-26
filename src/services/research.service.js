@@ -38,6 +38,9 @@ export default {
   deleteDocument(researchId, docId) {
     return http.delete(`/research/${researchId}/documents/${docId}`);
   },
+  getDocumentSignedUrl(researchId, docId) {
+    return http.get(`/research/${researchId}/documents/${docId}/signed-url`);
+  },
   getCertificate(id) {
     return http.get(`/research/${id}/certificate`, { responseType: 'blob' });
   },
