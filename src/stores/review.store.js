@@ -13,6 +13,7 @@ function unwrapData(payload) {
 export const useReviewStore = defineStore('review', {
   state: () => ({
     assignedReviews: /** @type {Array<Record<string, any>>} */ ([]),
+    archivedReviews: /** @type {Array<Record<string, any>>} */ ([]),
     currentReview: /** @type {null | Record<string, any>} */ (null),
     loading: false,
     error: '',
@@ -34,12 +35,27 @@ export const useReviewStore = defineStore('review', {
       }
     },
 
-    async fetchOne(researchId) {
+    async fetchArchived() {
+      this.loading = true;
+      this.error = '';
+      try {
+        const response = await reviewService.getArchived();
+        const archived = unwrapData(response?.data);
+        this.archivedReviews = Array.isArray(archived) ? archived : [];
+      } catch (err) {
+        this.error = err.response?.data?.error?.message || 'تعذر تحميل الأبحاث المؤرشفة';
+        throw err;
+      } finally {
+        this.loading = false;
+      }
+    },
+
+    async fetchOne(researchId, includeHistory = false) {
       this.loading = true;
       this.error = '';
       try {
         const [detailResponse, documentsResponse] = await Promise.all([
-          reviewService.getDetail(researchId),
+          reviewService.getDetail(researchId, includeHistory),
           researchService.listDocuments(researchId).catch(() => null),
         ]);
 

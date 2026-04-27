@@ -19,10 +19,17 @@
           v-if="research?.status === RESEARCH_STATUS.PENDING_ACTIVATION"
           variant="primary"
           icon-left="tag"
-          :loading="serialLoading"
-          @click="generateSerial"
+          @click="openSerialModal"
         >
-          توليد رقم تسلسلي
+          Generate Serial
+        </BaseButton>
+        <BaseButton
+          v-if="research?.status === 'awaiting_payment_2'"
+          variant="primary"
+          icon-left="payments"
+          @click="openSecondPaymentModal"
+        >
+          Set Second Payment
         </BaseButton>
       </template>
     </SectionHeader>
@@ -119,19 +126,31 @@
           </p>
         </BaseCard>
 
-        <BaseCard
-          title="سجل المدفوعات"
-          icon="payments"
-        >
-          <div class="space-y-3 text-sm">
-            <div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
-              <span>الدفع الأول</span>
-              <StatusBadge :status="mapPaymentStatus(research.payment_statuses?.first)" />
+        <BaseCard title="سجل المدفوعات" icon="payments">
+          <div v-if="research?.payments?.length" class="space-y-3">
+            <div v-for="payment in research.payments" :key="payment.id" class="p-3 border border-outline-variant/30 rounded-lg flex flex-col gap-2">
+              <div class="flex justify-between items-center">
+                <span class="text-xs font-bold">{{ payment.type === 'first' ? 'رسوم مبدئية' : 'رسوم المراجعة' }}</span>
+                <StatusBadge :status="mapPaymentStatus(payment.status)" />
+              </div>
+              <div class="flex justify-between items-end">
+                <span class="font-mono font-bold text-lg">{{ payment.amount }} EGP</span>
+                <div class="flex gap-2">
+                  <a v-if="payment.status === 'pending' && payment.checkout_url" :href="payment.checkout_url" target="_blank">
+                    <BaseButton variant="ghost" size="sm" icon="payments">رابط الدفع</BaseButton>
+                  </a>
+                  <router-link v-if="payment.status === 'paid'" :to="`/admin/research/${research.id}/receipt?paymentId=${payment.id}`" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                    الإيصال
+                  </router-link>
+                </div>
+              </div>
+              <div v-if="payment.gateway_ref" class="text-[10px] text-on-surface-variant font-mono">
+                Ref: {{ payment.gateway_ref }}
+              </div>
             </div>
-            <div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
-              <span>الدفع الثاني</span>
-              <StatusBadge :status="mapPaymentStatus(research.payment_statuses?.second)" />
-            </div>
+          </div>
+          <div v-else class="text-center py-4 text-on-surface-variant text-sm">
+            لا يوجد سجل دفع حتى الآن.
           </div>
         </BaseCard>
       </section>
@@ -178,6 +197,85 @@
         </BaseButton>
       </template>
     </BaseModal>
+
+    <!-- Serial Generation Modal -->
+    <BaseModal v-model="serialModalOpen" title="توليد الرقم التسلسلي" size="md">
+      <div v-if="!serialResult" class="space-y-4">
+        <p class="text-sm text-on-surface-variant">يرجى تحديد رسوم المراجعة المبدئية للبحث.</p>
+        <BaseInput
+          v-model="paymentAmount"
+          label="مبلغ الرسوم (EGP)"
+          type="number"
+          placeholder="مثال: 500"
+        />
+      </div>
+      <div v-else class="space-y-4">
+        <div class="p-4 bg-success/10 text-success rounded-lg flex items-center gap-3">
+          <AppIcon name="check_circle" />
+          <span class="font-bold">تم توليد الرقم التسلسلي بنجاح</span>
+        </div>
+        <div class="space-y-2 text-sm">
+          <p><span class="font-bold">الرقم التسلسلي:</span> <span class="font-mono">{{ serialResult.serial_number }}</span></p>
+          <p><span class="font-bold">المبلغ:</span> {{ serialResult.amount }} EGP</p>
+          <div class="mt-4 p-3 bg-surface-container-low rounded border border-outline-variant italic break-all text-xs font-mono">
+            {{ serialResult.checkout_url }}
+          </div>
+          <BaseButton variant="ghost" size="sm" icon="content_copy" @click="copyToClipboard(serialResult.checkout_url)">
+            نسخ رابط الدفع
+          </BaseButton>
+        </div>
+      </div>
+      <template #footer>
+        <template v-if="!serialResult">
+          <BaseButton variant="ghost" @click="serialModalOpen = false">إلغاء</BaseButton>
+          <BaseButton variant="primary" :loading="serialLoading" @click="submitGenerateSerial">
+            توليد وسداد
+          </BaseButton>
+        </template>
+        <template v-else>
+          <BaseButton variant="primary" @click="serialModalOpen = false">إغلاق</BaseButton>
+        </template>
+      </template>
+    </BaseModal>
+
+    <!-- Second Payment Modal -->
+    <BaseModal v-model="secondPaymentModalOpen" title="تحديد الدفعة الثانية" size="md">
+      <div v-if="!secondPaymentResult" class="space-y-4">
+        <p class="text-sm text-on-surface-variant">يرجى تحديد مبلغ الدفعة الثانية للبحث.</p>
+        <BaseInput
+          v-model="paymentAmount"
+          label="مبلغ الرسوم (EGP)"
+          type="number"
+          placeholder="مثال: 1000"
+        />
+      </div>
+      <div v-else class="space-y-4">
+        <div class="p-4 bg-success/10 text-success rounded-lg flex items-center gap-3">
+          <AppIcon name="check_circle" />
+          <span class="font-bold">تم تحديد الدفعة الثانية بنجاح</span>
+        </div>
+        <div class="space-y-2 text-sm">
+          <p><span class="font-bold">المبلغ:</span> {{ secondPaymentResult.amount }} EGP</p>
+          <div class="mt-4 p-3 bg-surface-container-low rounded border border-outline-variant italic break-all text-xs font-mono">
+            {{ secondPaymentResult.checkout_url }}
+          </div>
+          <BaseButton variant="ghost" size="sm" icon="content_copy" @click="copyToClipboard(secondPaymentResult.checkout_url)">
+            نسخ رابط الدفع
+          </BaseButton>
+        </div>
+      </div>
+      <template #footer>
+        <template v-if="!secondPaymentResult">
+          <BaseButton variant="ghost" @click="secondPaymentModalOpen = false">إلغاء</BaseButton>
+          <BaseButton variant="primary" :loading="secondPaymentLoading" @click="submitSecondPayment">
+            إرسال طلب السداد
+          </BaseButton>
+        </template>
+        <template v-else>
+          <BaseButton variant="primary" @click="secondPaymentModalOpen = false">إغلاق</BaseButton>
+        </template>
+      </template>
+    </BaseModal>
   </AppShellLayout>
 </template>
 
@@ -189,6 +287,7 @@ import BaseCard from '@/components/shared/BaseCard.vue';
 import BaseButton from '@/components/shared/BaseButton.vue';
 import BaseModal from '@/components/shared/BaseModal.vue';
 import BaseSelect from '@/components/shared/BaseSelect.vue';
+import BaseInput from '@/components/shared/BaseInput.vue';
 import LoadingSpinner from '@/components/shared/LoadingSpinner.vue';
 import StatusBadge from '@/components/shared/StatusBadge.vue';
 import ResearchTimeline from '@/components/shared/ResearchTimeline.vue';
@@ -272,16 +371,73 @@ async function submitAssignReviewer() {
   }
 }
 
-async function generateSerial() {
+const serialModalOpen = ref(false);
+const serialResult = ref(null);
+const secondPaymentModalOpen = ref(false);
+const secondPaymentResult = ref(null);
+const secondPaymentLoading = ref(false);
+const paymentAmount = ref(500);
+
+function openSerialModal() {
+  paymentAmount.value = 500;
+  serialResult.value = null;
+  serialModalOpen.value = true;
+}
+
+function openSecondPaymentModal() {
+  paymentAmount.value = research.value?.sample_size?.fee_amount || 0;
+  secondPaymentResult.value = null;
+  secondPaymentModalOpen.value = true;
+}
+
+async function submitGenerateSerial() {
+  if (paymentAmount.value <= 0) {
+    toast.warning('يرجى تحديد مبلغ صحيح');
+    return;
+  }
   serialLoading.value = true;
   try {
-    await adminService.generateSerial(Number(props.id));
-    toast.success('تم توليد الرقم التسلسلي');
+    const res = await adminService.generateSerial(Number(props.id), Number(paymentAmount.value));
+    toast.success('تم توليد الرقم التسلسلي ورابط الدفع');
+    const data = res.data?.data || {};
+    serialResult.value = {
+        serial_number: data.serial_number,
+        amount: data.amount || paymentAmount.value,
+        checkout_url: data.checkout_url
+    };
+    // No longer closing modal immediately
     await loadResearchDetail();
   } catch (err) {
     toast.error(err?.response?.data?.error?.message || 'تعذر توليد الرقم التسلسلي');
   } finally {
     serialLoading.value = false;
+  }
+}
+
+function copyToClipboard(text) {
+  navigator.clipboard.writeText(text);
+  toast.success('تم نسخ الرابط');
+}
+
+async function submitSecondPayment() {
+  if (paymentAmount.value <= 0) {
+    toast.warning('يرجى تحديد مبلغ صحيح');
+    return;
+  }
+  secondPaymentLoading.value = true;
+  try {
+    const res = await adminService.setSecondPayment(Number(props.id), Number(paymentAmount.value));
+    toast.success('تم تحديد مبلغ الدفعة الثانية وإرسال رابط الدفع');
+    const data = res.data?.data || {};
+    secondPaymentResult.value = {
+        amount: data.amount || paymentAmount.value,
+        checkout_url: data.checkout_url
+    };
+    await loadResearchDetail();
+  } catch (err) {
+    toast.error(err?.response?.data?.error?.message || 'تعذر تحديد الدفعة الثانية');
+  } finally {
+    secondPaymentLoading.value = false;
   }
 }
 

@@ -31,16 +31,11 @@
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <label 
           class="flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-colors"
-          :class="paymentMethod === 'fawry' ? 'border-primary bg-primary/5 text-primary' : 'border-outline-variant/50 hover:border-primary/50 text-on-surface'"
+          :class="paymentMethod === 'paymob' ? 'border-primary bg-primary/5 text-primary' : 'border-outline-variant/50 hover:border-primary/50 text-on-surface'"
         >
-          <input
-            v-model="paymentMethod"
-            type="radio"
-            value="fawry"
-            class="hidden"
-          >
-          <AppIcon name="storefront" />
-          <span class="font-bold">فوري (Fawry)</span>
+          <input type="radio" v-model="paymentMethod" value="paymob" class="hidden">
+          <AppIcon name="credit_score" />
+          <span class="font-bold">باي موب (Paymob)</span>
         </label>
         
         <label 
@@ -94,7 +89,7 @@ const props = defineProps({
 
 const emit = defineEmits(['submit']);
 
-const paymentMethod = ref('fawry');
+const paymentMethod = ref('paymob');
 
 const feeLabel = computed(() => {
   if (props.type === 'first') return 'الرسوم المبدئية (الدفع الأول)';

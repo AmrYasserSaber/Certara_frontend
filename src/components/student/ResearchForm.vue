@@ -1,15 +1,12 @@
 <template>
-  <form
-    class="space-y-6"
-    @submit.prevent="submitForm"
-  >
-    <BaseInput
-      v-model="formData.title"
-      label="عنوان البحث"
-      placeholder="أدخل عنوان البحث كاملاً"
-      :error="errors.title"
-      required
-    />
+  <form @submit.prevent="submitForm" class="space-y-6">
+     <BaseInput
+       v-model="formData.title"
+       label="عنوان البحث"
+       placeholder="أدخل عنوان البحث كاملاً"
+       :error="errors.title"
+       :required="!allowPartial"
+     />
     
     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
       <BaseInput
@@ -17,14 +14,14 @@
         label="الباحث الرئيسي"
         placeholder="الاسم الكامل للباحث الرئيسي"
         :error="errors.principal_investigator"
-        required
+        :required="!allowPartial"
       />
       <BaseInput
         v-model="formData.department"
         label="القسم"
         placeholder="القسم التابع له الباحث"
         :error="errors.department"
-        required
+        :required="!allowPartial"
       />
     </div>
 
@@ -33,7 +30,7 @@
       label="الكلية / الجهة"
       placeholder="الكلية أو الجهة التابع لها الباحث"
       :error="errors.faculty"
-      required
+      :required="!allowPartial"
     />
     
     <BaseTextarea
@@ -72,6 +69,10 @@ const props = defineProps({
     type: Object,
     default: () => ({}),
   },
+  allowPartial: {
+    type: Boolean,
+    default: false
+  }
 });
 
 const emit = defineEmits(['submit', 'cancel']);
@@ -93,6 +94,8 @@ watch(() => props.initialData, (newVal) => {
 }, { deep: true });
 
 function validate() {
+  if (props.allowPartial) return true;
+  
   errors.value = {};
   if (!formData.value.title) errors.value.title = 'حقل مطلوب';
   if (!formData.value.principal_investigator) errors.value.principal_investigator = 'حقل مطلوب';
