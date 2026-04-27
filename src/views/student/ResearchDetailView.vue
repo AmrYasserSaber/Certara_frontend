@@ -115,9 +115,14 @@
                   </div>
                   <div class="flex justify-between items-end">
                     <span class="font-mono font-bold text-lg">{{ payment.amount }} EGP</span>
-                    <router-link v-if="payment.status === 'paid'" :to="`/student/research/${current.id}/receipt?paymentId=${payment.id}`" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
-                      عرض الإيصال
-                    </router-link>
+                    <div class="flex gap-2">
+                      <a v-if="payment.status === 'pending' && payment.checkout_url" :href="payment.checkout_url" target="_blank">
+                        <BaseButton variant="primary" size="sm" icon="payments">ادفع الآن</BaseButton>
+                      </a>
+                      <router-link v-if="payment.status === 'paid'" :to="`/student/research/${current.id}/receipt?paymentId=${payment.id}`" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
+                        عرض الإيصال
+                      </router-link>
+                    </div>
                   </div>
                 </div>
              </div>

@@ -80,8 +80,11 @@ export default {
 
     return http.put(`/admin/research/${researchId}/assign-reviewer`, payload, config);
   },
-  generateSerial(researchId) {
-    return http.post(`/admin/research/${researchId}/serial`, {}, withCsrf());
+  generateSerial(researchId, amount) {
+    return http.post(`/admin/research/${researchId}/serial`, { amount }, withCsrf());
+  },
+  setSecondPayment(researchId, amount) {
+    return http.post(`/admin/research/${researchId}/second-payment`, { amount }, withCsrf());
   },
   activityLogs(params = {}) {
     return http.get('/admin/logs', withCookieAuth({ params }));
