@@ -37,12 +37,32 @@
             <BaseButton variant="primary" icon="edit">تعديل البحث</BaseButton>
           </router-link>
 
+          <!-- We will show the Pay button in the banner if pendingPayment exists, 
+               otherwise keep the router-link as a fallback/standard way -->
           <router-link
-            v-if="['AWAITING_PAYMENT_1', 'AWAITING_PAYMENT_2'].includes(current.status?.toUpperCase())"
+            v-if="['AWAITING_PAYMENT_1', 'AWAITING_PAYMENT_2'].includes(current.status?.toUpperCase()) && !pendingPayment"
             :to="{ name: 'student.research.pay', params: { id: current.id } }"
           >
             <BaseButton variant="primary" icon="payments">إكمال الدفع</BaseButton>
           </router-link>
+        </div>
+      </div>
+
+      <!-- Payment Alert Banner -->
+      <div v-if="pendingPayment && pendingPayment.checkout_url" class="p-5 bg-primary/10 text-primary rounded-xl border border-primary/20 flex flex-col md:flex-row justify-between items-center gap-4 mb-6 shadow-sm border-dashed">
+        <div class="flex items-center gap-4">
+          <div class="bg-primary text-on-primary p-3 rounded-xl shadow-lg animate-pulse">
+            <AppIcon name="payments" size="lg" />
+          </div>
+          <div>
+            <h3 class="font-bold text-lg">مطلوب سداد رسوم ({{ pendingPayment.type === 'first' ? 'مبدئية' : 'مراجعة' }})</h3>
+            <p class="text-sm opacity-90">يرجى إتمام عملية الدفع للانتقال للخطوة التالية. المبلغ: <span class="font-bold font-mono">{{ pendingPayment.amount }} EGP</span></p>
+          </div>
+        </div>
+        <div class="flex gap-2">
+           <a :href="pendingPayment.checkout_url" target="_blank">
+             <BaseButton variant="primary" icon-left="bolt" size="lg">سداد الرسوم الآن</BaseButton>
+           </a>
         </div>
       </div>
 
@@ -172,6 +192,10 @@ onMounted(async () => {
 });
 
 const current = computed(() => store.current);
+
+const pendingPayment = computed(() => {
+  return payments.value.find(p => p.status === 'pending');
+});
 
 function getDocumentTypeName(type) {
   const map = {
