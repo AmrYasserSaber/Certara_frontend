@@ -13,15 +13,15 @@
           class="mb-6"
         />
 
-        <div v-if="fawryReference" class="p-8 text-center bg-surface-container-high rounded-xl border border-primary/20 shadow-sm mt-6">
+        <div v-if="paymobUrl" class="p-8 text-center bg-surface-container-high rounded-xl border border-primary/20 shadow-sm mt-6">
           <AppIcon name="receipt_long" size="xl" class="text-primary mb-4" />
-          <h3 class="text-2xl font-bold font-headline mb-2 text-on-surface">طلب الدفع قيد الانتظار</h3>
+          <h3 class="text-2xl font-bold font-headline mb-2 text-on-surface">تم إنشاء رابط الدفع</h3>
           <p class="text-on-surface-variant mb-6 text-lg max-w-md mx-auto">
-            يرجى التوجه إلى أقرب منفذ فوري واستخدام الرقم المرجعي التالي لسداد الرسوم:
+            يرجى الانتقال إلى بوابة الدفع لإتمام العملية.
           </p>
           
-          <div class="bg-surface p-6 rounded-lg inline-block border-2 border-dashed border-primary mb-6">
-            <span class="text-4xl font-mono font-bold tracking-widest text-primary block">{{ fawryReference }}</span>
+          <div class="mb-6">
+            <BaseButton variant="primary" size="lg" :href="paymobUrl" target="_blank">الانتقال إلى بوابة الدفع</BaseButton>
           </div>
           
           <div class="flex justify-center gap-4">
@@ -71,7 +71,7 @@ const store = useResearchStore();
 const router = useRouter();
 const processing = ref(false);
 const paymentError = ref('');
-const fawryReference = ref(null);
+const paymobUrl = ref(null);
 
 const currentResearch = computed(() => store.current);
 
@@ -116,8 +116,9 @@ async function handlePayment(payload) {
 
     const result = await store.submitPayment(props.id, requestPayload);
     
-    if (result && result.fawry_reference) {
-      fawryReference.value = result.fawry_reference;
+    if (result && result.checkout_url) {
+      paymobUrl.value = result.checkout_url;
+      window.open(result.checkout_url, '_blank');
     } else {
       // Direct redirect if no reference number or another method was used
       router.push({ name: 'student.research.receipt', params: { id: props.id }, query: { paymentId: result.payment_id || result.payment?.id }});
