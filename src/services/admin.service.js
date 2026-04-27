@@ -106,4 +106,7 @@ export default {
   issueCertificate(id) {
     return http.post(`/manager/research/${id}/certificate`, {}, withCsrf());
   },
+  managerApprovedCertificates(params = {}) {
+    return http.get('/manager/certificates', withCookieAuth({ params }));
+  },
 };

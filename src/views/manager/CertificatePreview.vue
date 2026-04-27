@@ -53,15 +53,6 @@
                     <p class="text-sm text-on-surface-variant">لجنة أخلاقيات البحوث الطبية (IRB)</p>
                   </div>
 
-                  <div
-                    class="w-24 h-24 bg-surface-container-high rounded-sm flex items-center justify-center border border-outline-variant/20 overflow-hidden shadow-inner"
-                  >
-                    <img
-                      :src="egyptUniversityLogo"
-                      alt="Logo"
-                      class="w-20 h-20 object-contain p-1"
-                    />
-                  </div>
 
                   <div class="text-left">
                     <div class="text-xs uppercase tracking-widest text-on-surface-variant mb-1">الرقم المرجعي</div>
@@ -74,26 +65,7 @@
                   </div>
                 </div>
 
-                <div
-                  class="relative z-10 mb-8 flex justify-center border-b-2 border-primary/10 pb-6"
-                >
-                  <div class="text-center">
-                    <div
-                      class="mx-auto mb-3 h-24 w-20 overflow-hidden rounded-sm border-2 border-primary/10 bg-slate-100 p-0.5 shadow-md"
-                    >
-                      <img
-                        :src="presidentPortrait"
-                        alt="President"
-                        class="h-full w-full object-cover"
-                      />
-                    </div>
-                    <p class="text-xs font-bold text-primary uppercase tracking-wide">
-                      تحت رعاية السيد الرئيس عبد الفتاح السيسي
-                    </p>
-                    <p class="text-[10px] text-on-surface-variant/70 mt-0.5">رئيس جمهورية مصر العربية</p>
-                  </div>
-                </div>
-
+                
                 <div class="relative z-10 flex flex-1 flex-col px-8 py-8 text-center">
                   <h4 class="mb-10 text-4xl font-black tracking-tight text-secondary font-display">
                     شهادة اعتماد بروتوكول بحثي
@@ -319,23 +291,6 @@
           <div class="absolute h-[200px] w-[200px] bg-primary"></div>
         </div>
 
-        <div class="relative z-10 mb-8 flex justify-center border-b-2 border-primary/10 pb-4">
-          <div class="text-center">
-            <div
-              class="mx-auto mb-2 h-20 w-16 overflow-hidden rounded-sm border border-slate-200 bg-slate-100 p-0.5 shadow-sm"
-            >
-              <img
-                :src="presidentPortrait"
-                alt="President"
-                class="h-full w-full object-cover"
-              />
-            </div>
-            <p class="text-[10px] font-bold text-on-surface-variant">
-              تحت رعاية السيد الرئيس عبد الفتاح السيسي
-            </p>
-            <p class="text-[8px] text-on-surface-variant/70">رئيس جمهورية مصر العربية</p>
-          </div>
-        </div>
 
         <div class="relative z-10 mb-16 flex items-start justify-between">
           <div class="text-right">

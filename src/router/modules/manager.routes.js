@@ -22,4 +22,10 @@ export default [
     meta: { requiresAuth: true, roles: [ROLES.MANAGER] },
     props: true,
   },
+  {
+    path: '/manager/certificates',
+    name: 'manager.certificates',
+    component: () => import('@/views/manager/ApprovedCertificates.vue'),
+    meta: { requiresAuth: true, roles: [ROLES.MANAGER] },
+  },
 ];
