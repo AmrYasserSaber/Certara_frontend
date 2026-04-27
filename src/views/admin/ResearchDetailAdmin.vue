@@ -6,8 +6,18 @@
       description="عرض كامل للبحث، بيانات الطالب، المستندات، السداد، وخط زمني للحالة."
     >
       <template #actions>
-        <BaseButton variant="ghost" icon-left="arrow_back" to="/admin/research"> رجوع </BaseButton>
-        <BaseButton variant="secondary" icon-left="person_add" @click="assignModalOpen = true">
+        <BaseButton
+          variant="ghost"
+          icon-left="arrow_back"
+          to="/admin/research"
+        >
+          رجوع
+        </BaseButton>
+        <BaseButton
+          variant="secondary"
+          icon-left="person_add"
+          @click="assignModalOpen = true"
+        >
           Assign Reviewer
         </BaseButton>
         <BaseButton
@@ -22,24 +32,31 @@
       </template>
     </SectionHeader>
 
-    <div v-if="loading" class="card-flat p-12 flex justify-center">
+    <div
+      v-if="loading"
+      class="card-flat p-12 flex justify-center"
+    >
       <LoadingSpinner />
     </div>
 
     <template v-else-if="research">
-      <BaseCard title="الحالة الحالية" icon="hub">
+      <BaseCard
+        title="الحالة الحالية"
+        icon="hub"
+      >
         <div class="mb-4 flex items-center gap-3">
           <StatusBadge :status="research.status" />
-          <span class="text-sm text-on-surface-variant"
-            >الرقم التسلسلي:
-            <span class="font-mono">{{ research.serial_number || '—' }}</span></span
-          >
+          <span class="text-sm text-on-surface-variant">الرقم التسلسلي:
+            <span class="font-mono">{{ research.serial_number || '—' }}</span></span>
         </div>
         <ResearchTimeline :status="research.status" />
       </BaseCard>
 
       <section class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
-        <BaseCard title="بيانات البحث" icon="description">
+        <BaseCard
+          title="بيانات البحث"
+          icon="description"
+        >
           <div class="space-y-3 text-sm">
             <p><span class="font-bold">العنوان:</span> {{ research.title || '—' }}</p>
             <p>
@@ -56,7 +73,10 @@
           </div>
         </BaseCard>
 
-        <BaseCard title="بيانات الطالب" icon="person">
+        <BaseCard
+          title="بيانات الطالب"
+          icon="person"
+        >
           <div class="space-y-3 text-sm">
             <p><span class="font-bold">الاسم:</span> {{ research.student?.name || '—' }}</p>
             <p><span class="font-bold">البريد:</span> {{ research.student?.email || '—' }}</p>
@@ -71,8 +91,14 @@
       </section>
 
       <section class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
-        <BaseCard title="المستندات" icon="attach_file">
-          <div v-if="documents.length" class="space-y-2">
+        <BaseCard
+          title="المستندات"
+          icon="attach_file"
+        >
+          <div
+            v-if="documents.length"
+            class="space-y-2"
+          >
             <a
               v-for="doc in documents"
               :key="doc.id || doc.file_path"
@@ -90,12 +116,18 @@
               <span class="material-symbols-outlined">download</span>
             </a>
           </div>
-          <p v-else class="text-sm text-on-surface-variant">
+          <p
+            v-else
+            class="text-sm text-on-surface-variant"
+          >
             لا توجد قائمة مستندات مفصلة من هذا endpoint حاليًا.
           </p>
         </BaseCard>
 
-        <BaseCard title="سجل المدفوعات" icon="payments">
+        <BaseCard
+          title="سجل المدفوعات"
+          icon="payments"
+        >
           <div class="space-y-3 text-sm">
             <div class="p-3 rounded-lg bg-surface-container-low flex items-center justify-between">
               <span>الدفع الأول</span>
@@ -110,11 +142,22 @@
       </section>
     </template>
 
-    <BaseCard v-else title="غير متوفر" icon="info" class="mt-6">
-      <p class="text-sm text-on-surface-variant">لم يتم العثور على البحث المطلوب.</p>
+    <BaseCard
+      v-else
+      title="غير متوفر"
+      icon="info"
+      class="mt-6"
+    >
+      <p class="text-sm text-on-surface-variant">
+        لم يتم العثور على البحث المطلوب.
+      </p>
     </BaseCard>
 
-    <BaseModal v-model="assignModalOpen" title="تعيين مراجع" size="md">
+    <BaseModal
+      v-model="assignModalOpen"
+      title="تعيين مراجع"
+      size="md"
+    >
       <div class="space-y-4">
         <BaseSelect
           v-model="selectedReviewerId"
@@ -125,8 +168,17 @@
       </div>
 
       <template #footer>
-        <BaseButton variant="ghost" @click="assignModalOpen = false">إلغاء</BaseButton>
-        <BaseButton variant="primary" :loading="assigning" @click="submitAssignReviewer">
+        <BaseButton
+          variant="ghost"
+          @click="assignModalOpen = false"
+        >
+          إلغاء
+        </BaseButton>
+        <BaseButton
+          variant="primary"
+          :loading="assigning"
+          @click="submitAssignReviewer"
+        >
           حفظ التعيين
         </BaseButton>
       </template>

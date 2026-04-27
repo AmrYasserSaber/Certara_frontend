@@ -1,12 +1,28 @@
 <template>
   <section class="thread">
-    <h3 class="title">سجل التعليقات</h3>
+    <h3 class="title">
+      سجل التعليقات
+    </h3>
 
-    <p v-if="!sortedComments.length" class="empty">لا توجد تعليقات بعد.</p>
+    <p
+      v-if="!sortedComments.length"
+      class="empty"
+    >
+      لا توجد تعليقات بعد.
+    </p>
 
-    <ul v-else class="list">
-      <li v-for="comment in sortedComments" :key="comment.id" class="comment">
-        <p class="text">{{ comment.comment_text }}</p>
+    <ul
+      v-else
+      class="list"
+    >
+      <li
+        v-for="comment in sortedComments"
+        :key="comment.id"
+        class="comment"
+      >
+        <p class="text">
+          {{ comment.comment_text }}
+        </p>
         <time class="date">{{ formatDate(comment.created_at) }}</time>
       </li>
     </ul>

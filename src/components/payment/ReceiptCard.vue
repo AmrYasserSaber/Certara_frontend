@@ -3,10 +3,17 @@
     <!-- Receipt Header -->
     <div class="bg-primary/5 p-6 border-b border-outline-variant/30 text-center">
       <div class="w-16 h-16 bg-primary-container text-primary rounded-full flex items-center justify-center mx-auto mb-4">
-        <AppIcon name="check_circle" size="xl" />
+        <AppIcon
+          name="check_circle"
+          size="xl"
+        />
       </div>
-      <h2 class="text-xl font-headline font-bold text-on-surface mb-1">إيصال دفع</h2>
-      <p class="text-on-surface-variant text-sm">تم الدفع بنجاح</p>
+      <h2 class="text-xl font-headline font-bold text-on-surface mb-1">
+        إيصال دفع
+      </h2>
+      <p class="text-on-surface-variant text-sm">
+        تم الدفع بنجاح
+      </p>
     </div>
 
     <!-- Details -->
@@ -38,7 +45,12 @@
 
     <!-- Actions -->
     <div class="p-6 bg-surface-container-lowest border-t border-outline-variant/30 mt-2 flex gap-3">
-      <BaseButton variant="outline" class="flex-1" icon="print" @click="printReceipt">
+      <BaseButton
+        variant="outline"
+        class="flex-1"
+        icon="print"
+        @click="printReceipt"
+      >
         طباعة الإيصال
       </BaseButton>
     </div>

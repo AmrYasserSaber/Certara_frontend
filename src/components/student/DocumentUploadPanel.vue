@@ -50,7 +50,11 @@
     </div>
 
     <div class="flex justify-end gap-3 mt-8">
-      <BaseButton type="button" variant="outline" @click="$emit('back')">
+      <BaseButton
+        type="button"
+        variant="outline"
+        @click="$emit('back')"
+      >
         عودة
       </BaseButton>
       <BaseButton
@@ -78,7 +82,7 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(['submit', 'back']);
+
 
 const files = ref({
   protocol: props.initialFiles.protocol || null,

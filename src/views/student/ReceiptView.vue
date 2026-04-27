@@ -1,10 +1,23 @@
 <template>
   <AppShellLayout page-title="إيصال الدفع">
     <div class="max-w-2xl mx-auto">
-      <div v-if="loading" class="flex justify-center p-12"><LoadingSpinner /></div>
-      <div v-else-if="error" class="p-4 bg-error-container text-on-error-container rounded-lg text-center">{{ error }}</div>
-      
-      <div v-else-if="receiptData" class="space-y-6">
+      <div
+        v-if="loading"
+        class="flex justify-center p-12"
+      >
+        <LoadingSpinner />
+      </div>
+      <div
+        v-else-if="error"
+        class="p-4 bg-error-container text-on-error-container rounded-lg text-center"
+      >
+        {{ error }}
+      </div>
+
+      <div
+        v-else-if="receiptData"
+        class="space-y-6"
+      >
         <ReceiptCard
           :receipt-number="receiptData.gateway_ref || receiptData.id.toString()"
           :amount="receiptData.amount"
@@ -14,8 +27,8 @@
         />
 
         <div class="text-center">
-          <BaseButton 
-            variant="ghost" 
+          <BaseButton
+            variant="ghost"
             icon-left="arrow_back"
             :to="{ name: 'student.research.detail', params: { id: researchId } }"
           >
@@ -43,7 +56,7 @@ const props = defineProps({
 
 const route = useRoute();
 const store = useResearchStore();
-const paymentId = route.query.paymentId; 
+const paymentId = route.query.paymentId;
 
 const loading = ref(true);
 const error = ref('');
@@ -56,10 +69,10 @@ onMounted(async () => {
   loading.value = true;
   try {
     // 1. Make sure research is loaded to get serial number
-    if (!store.current || store.current.id != researchId.value) {
+    if (!store.current || store.current.id !== researchId.value) {
       await store.fetchOne(researchId.value);
     }
-    
+
     // 2. Fetch Receipt from Payment Service
     const response = await paymentService.getReceipt(researchId.value, paymentId);
     receiptData.value = response.data?.receipt || response.data;

@@ -40,10 +40,18 @@
     </div>
 
     <div class="mt-4 flex items-center justify-end gap-2">
-      <BaseButton variant="ghost" icon-left="restart_alt" @click="$emit('reset')">
+      <BaseButton
+        variant="ghost"
+        icon-left="restart_alt"
+        @click="$emit('reset')"
+      >
         إعادة تعيين
       </BaseButton>
-      <BaseButton variant="primary" icon-left="filter_alt" @click="$emit('apply')">
+      <BaseButton
+        variant="primary"
+        icon-left="filter_alt"
+        @click="$emit('apply')"
+      >
         تطبيق الفلاتر
       </BaseButton>
     </div>

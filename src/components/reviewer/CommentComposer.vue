@@ -1,6 +1,9 @@
 <template>
   <section class="composer">
-    <label class="label" for="review-comment-text">إضافة تعليق</label>
+    <label
+      class="label"
+      for="review-comment-text"
+    >إضافة تعليق</label>
 
     <textarea
       id="review-comment-text"

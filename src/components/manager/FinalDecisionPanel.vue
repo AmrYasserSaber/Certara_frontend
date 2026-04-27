@@ -1,5 +1,10 @@
 <template>
-  <BaseCard title="القرار النهائي" icon="gavel" class="mt-6" accent-rail="gold">
+  <BaseCard
+    title="القرار النهائي"
+    icon="gavel"
+    class="mt-6"
+    accent-rail="gold"
+  >
     <div class="space-y-4">
       <p class="text-sm text-on-surface-variant">
         يرجى كتابة تعليق واضح قبل اعتماد القرار النهائي.

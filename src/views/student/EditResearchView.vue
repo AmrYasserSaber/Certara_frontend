@@ -1,12 +1,27 @@
 <template>
   <AppShellLayout page-title="تعديل البحث">
-    <div v-if="store.loading" class="flex justify-center p-12"><LoadingSpinner /></div>
-    <div v-else-if="store.error" class="p-4 bg-error-container text-on-error-container rounded-lg">{{ store.error }}</div>
+    <div
+      v-if="store.loading"
+      class="flex justify-center p-12"
+    >
+      <LoadingSpinner />
+    </div>
+    <div
+      v-else-if="store.error"
+      class="p-4 bg-error-container text-on-error-container rounded-lg"
+    >
+      {{ store.error }}
+    </div>
     
-    <div v-else-if="current" class="max-w-4xl mx-auto space-y-8 mb-10">
-      
+    <div
+      v-else-if="current"
+      class="max-w-4xl mx-auto space-y-8 mb-10"
+    >
       <!-- Reviewer Comments if REVISION_REQUESTED -->
-      <div v-if="current.status === 'REVISION_REQUESTED' && comments.length" class="mb-6">
+      <div
+        v-if="current.status === 'REVISION_REQUESTED' && comments.length"
+        class="mb-6"
+      >
         <ReviewerComments :comments="comments" />
       </div>
 
@@ -27,8 +42,11 @@
 
         <BaseCard title="إعادة رفع المستندات المطلوبة">
           <div class="mb-4 p-4 rounded-lg bg-info-container text-on-info-container border border-info/20 text-sm flex gap-3 items-start">
-             <AppIcon name="info" class="mt-0.5 text-info" />
-             <p>عند رفع أي مستند هنا، سيتم استبدال المستند القديم. اترك الحقل فارغاً إذا لم تكن تريد تغيير المستند الحالي.</p>
+            <AppIcon
+              name="info"
+              class="mt-0.5 text-info"
+            />
+            <p>عند رفع أي مستند هنا، سيتم استبدال المستند القديم. اترك الحقل فارغاً إذا لم تكن تريد تغيير المستند الحالي.</p>
           </div>
           <DocumentUploadPanel
             :initial-files="{}"
@@ -37,7 +55,6 @@
           />
         </BaseCard>
       </div>
-
     </div>
   </AppShellLayout>
 </template>

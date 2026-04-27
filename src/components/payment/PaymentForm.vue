@@ -1,7 +1,12 @@
 <template>
-  <form @submit.prevent="submit" class="space-y-6">
+  <form
+    class="space-y-6"
+    @submit.prevent="submit"
+  >
     <div class="bg-surface-container-low border border-outline-variant/30 rounded-xl p-5 mb-6">
-      <h3 class="font-headline font-bold text-lg mb-4 text-on-surface">ملخص الدفع</h3>
+      <h3 class="font-headline font-bold text-lg mb-4 text-on-surface">
+        ملخص الدفع
+      </h3>
       
       <div class="flex justify-between items-center py-2 border-b border-outline-variant/30 text-on-surface-variant">
         <span>رقم البحث التسلسلي</span>
@@ -20,13 +25,20 @@
     </div>
 
     <div>
-      <p class="font-bold text-sm mb-3">اختر وسيلة الدفع</p>
+      <p class="font-bold text-sm mb-3">
+        اختر وسيلة الدفع
+      </p>
       <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
         <label 
           class="flex items-center gap-3 p-4 border rounded-lg cursor-pointer transition-colors"
           :class="paymentMethod === 'fawry' ? 'border-primary bg-primary/5 text-primary' : 'border-outline-variant/50 hover:border-primary/50 text-on-surface'"
         >
-          <input type="radio" v-model="paymentMethod" value="fawry" class="hidden">
+          <input
+            v-model="paymentMethod"
+            type="radio"
+            value="fawry"
+            class="hidden"
+          >
           <AppIcon name="storefront" />
           <span class="font-bold">فوري (Fawry)</span>
         </label>
@@ -34,14 +46,22 @@
         <label 
           class="flex items-center gap-3 p-4 border rounded-lg cursor-not-allowed opacity-50 border-outline-variant/50 text-on-surface bg-surface-container-high"
         >
-          <input type="radio" value="card" disabled class="hidden">
+          <input
+            type="radio"
+            value="card"
+            disabled
+            class="hidden"
+          >
           <AppIcon name="credit_card" />
           <span class="font-bold">بطاقة ائتمان (قريباً)</span>
         </label>
       </div>
     </div>
 
-    <div v-if="error" class="p-3 bg-error-container text-on-error-container rounded-lg text-sm">
+    <div
+      v-if="error"
+      class="p-3 bg-error-container text-on-error-container rounded-lg text-sm"
+    >
       {{ error }}
     </div>
 

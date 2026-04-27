@@ -21,13 +21,18 @@
       empty-title="لا توجد أبحاث مطابقة"
     >
       <template #row="{ row }">
-        <td class="font-bold text-on-background max-w-[280px] truncate" :title="row.title">
+        <td
+          class="font-bold text-on-background max-w-[280px] truncate"
+          :title="row.title"
+        >
           {{ row.title }}
         </td>
         <td>{{ row.student?.name || row.student_name || '—' }}</td>
         <td>{{ row.department || '—' }}</td>
         <td><StatusBadge :status="row.status" /></td>
-        <td class="font-mono text-xs">{{ formatDate(row.created_at) }}</td>
+        <td class="font-mono text-xs">
+          {{ formatDate(row.created_at) }}
+        </td>
         <td>
           <div class="flex items-center gap-2">
             <BaseButton
@@ -81,8 +86,17 @@
       </div>
 
       <template #footer>
-        <BaseButton variant="ghost" @click="assignModalOpen = false"> إلغاء </BaseButton>
-        <BaseButton variant="primary" :loading="assigning" @click="submitAssignReviewer">
+        <BaseButton
+          variant="ghost"
+          @click="assignModalOpen = false"
+        >
+          إلغاء
+        </BaseButton>
+        <BaseButton
+          variant="primary"
+          :loading="assigning"
+          @click="submitAssignReviewer"
+        >
           حفظ التعيين
         </BaseButton>
       </template>

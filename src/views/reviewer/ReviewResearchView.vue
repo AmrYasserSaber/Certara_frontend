@@ -1,6 +1,12 @@
 <template>
-  <AppShellLayout page-title="مركز المراجعة العمياء" active-variant="gold">
-    <div dir="rtl" class="space-y-4">
+  <AppShellLayout
+    page-title="مركز المراجعة العمياء"
+    active-variant="gold"
+  >
+    <div
+      dir="rtl"
+      class="space-y-4"
+    >
       <span class="blind-badge">وضع الهوية المخفية نشط 🔒</span>
 
       <section class="grid-layout">
@@ -15,16 +21,26 @@
               </div>
 
               <div class="header-actions">
-                <button class="icon-btn" type="button" @click="printView">
+                <button
+                  class="icon-btn"
+                  type="button"
+                  @click="printView"
+                >
                   <span class="material-symbols-outlined">print</span>
                 </button>
-                <button class="icon-btn" type="button" @click="downloadFirstDocument">
+                <button
+                  class="icon-btn"
+                  type="button"
+                  @click="downloadFirstDocument"
+                >
                   <span class="material-symbols-outlined">download</span>
                 </button>
               </div>
             </div>
 
-            <h2 class="research-title">{{ selectedResearch.title }}</h2>
+            <h2 class="research-title">
+              {{ selectedResearch.title }}
+            </h2>
 
             <section class="text-section">
               <h3>1. ملخص البحث (Abstract)</h3>
@@ -55,7 +71,10 @@
 
             <CommentThread :comments="comments" />
 
-            <CommentComposer :submit-action="submitComment" @comment-added="refreshDetail" />
+            <CommentComposer
+              :submit-action="submitComment"
+              @comment-added="refreshDetail"
+            />
 
             <DecisionPanel
               :submit-action="submitDecision"
@@ -63,18 +82,39 @@
             />
           </template>
 
-          <p v-else-if="loading" class="state-text">جاري تحميل بيانات البحث...</p>
+          <p
+            v-else-if="loading"
+            class="state-text"
+          >
+            جاري تحميل بيانات البحث...
+          </p>
 
-          <p v-else class="state-text">لا يوجد بحث مسند حالياً</p>
+          <p
+            v-else
+            class="state-text"
+          >
+            لا يوجد بحث مسند حالياً
+          </p>
         </article>
 
         <aside class="list-panel">
           <h3>الأبحاث المسندة</h3>
 
-          <p v-if="loading && !assignedReviews.length" class="state-text">جاري التحميل...</p>
+          <p
+            v-if="loading && !assignedReviews.length"
+            class="state-text"
+          >
+            جاري التحميل...
+          </p>
 
-          <ul v-else class="research-list">
-            <li v-for="item in assignedReviews" :key="item.id">
+          <ul
+            v-else
+            class="research-list"
+          >
+            <li
+              v-for="item in assignedReviews"
+              :key="item.id"
+            >
               <button
                 :class="['research-card', { active: Number(item.id) === Number(selectedId) }]"
                 type="button"

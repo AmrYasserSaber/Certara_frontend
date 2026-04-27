@@ -1,6 +1,8 @@
 <template>
   <section class="decision-panel">
-    <h3 class="heading">لجنة المراجعة: القرار النهائي</h3>
+    <h3 class="heading">
+      لجنة المراجعة: القرار النهائي
+    </h3>
 
     <div class="actions">
       <BaseButton
@@ -29,11 +31,20 @@
       </BaseButton>
     </div>
 
-    <BaseModal v-model="showModal" title="تأكيد إرسال القرار" size="md">
+    <BaseModal
+      v-model="showModal"
+      title="تأكيد إرسال القرار"
+      size="md"
+    >
       <div class="modal-body">
-        <p class="modal-text">سيتم اعتماد هذا القرار كقرار نهائي.</p>
+        <p class="modal-text">
+          سيتم اعتماد هذا القرار كقرار نهائي.
+        </p>
 
-        <label class="comment-label" for="decision-comment">
+        <label
+          class="comment-label"
+          for="decision-comment"
+        >
           ملاحظات القرار
           <span v-if="requiresComment">(إجباري)</span>
           <span v-else>(اختياري)</span>
@@ -52,7 +63,13 @@
       </div>
 
       <template #footer>
-        <BaseButton variant="ghost" :disabled="submitting" @click="closeModal"> إلغاء </BaseButton>
+        <BaseButton
+          variant="ghost"
+          :disabled="submitting"
+          @click="closeModal"
+        >
+          إلغاء
+        </BaseButton>
         <BaseButton
           variant="primary"
           :disabled="!canConfirm"

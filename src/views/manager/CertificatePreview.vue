@@ -1,12 +1,18 @@
 <template>
-  <div class="certificate-page min-h-screen bg-surface text-on-surface" dir="rtl" lang="ar">
+  <div
+    class="certificate-page min-h-screen bg-surface text-on-surface"
+    dir="rtl"
+    lang="ar"
+  >
     <!-- Screen layout -->
     <div class="screen-only">
       <aside
         class="fixed right-0 top-0 z-50 flex h-screen w-72 flex-col border-l border-white/5 bg-[#0F1F2E]"
       >
         <div class="px-6 py-8">
-          <div class="mb-1 text-xl font-bold text-white font-headline">نظام أخلاقيات البحث</div>
+          <div class="mb-1 text-xl font-bold text-white font-headline">
+            نظام أخلاقيات البحث
+          </div>
           <div class="text-xs font-medium uppercase tracking-widest text-slate-400">
             بوابة المدير الإداري
           </div>
@@ -17,7 +23,10 @@
             class="flex items-center gap-3 rounded-sm bg-[#0D6E6E] px-4 py-3 font-bold text-white shadow-inner"
             to="/manager"
           >
-            <AppIcon name="dashboard" :filled="true" />
+            <AppIcon
+              name="dashboard"
+              :filled="true"
+            />
             <span class="text-[15px]">لوحة التحكم</span>
           </router-link>
         </nav>
@@ -49,7 +58,9 @@
         <div class="flex items-center gap-6">
           <div class="flex items-center gap-3">
             <div class="text-right">
-              <div class="text-sm font-bold text-white">{{ auth.user?.name || 'أحمد الشمري' }}</div>
+              <div class="text-sm font-bold text-white">
+                {{ auth.user?.name || 'أحمد الشمري' }}
+              </div>
               <div class="text-xs text-slate-400">
                 {{ auth.role || 'مدير لجنة أخلاقيات البحث' }}
               </div>
@@ -88,7 +99,7 @@
               class="w-full rounded-sm border-none bg-white/5 py-2 pr-10 pl-4 text-sm text-white focus:ring-1 focus:ring-primary"
               placeholder="البحث عن بروتوكول أو شهادة..."
               type="text"
-            />
+            >
           </div>
         </div>
       </header>
@@ -99,9 +110,15 @@
             <div>
               <div class="mb-2 flex items-center gap-2 text-sm text-on-surface-variant">
                 <span>الرئيسية</span>
-                <AppIcon name="chevron_left" size="xs" />
+                <AppIcon
+                  name="chevron_left"
+                  size="xs"
+                />
                 <span>الشهادات المصدرة</span>
-                <AppIcon name="chevron_left" size="xs" />
+                <AppIcon
+                  name="chevron_left"
+                  size="xs"
+                />
                 <span class="font-bold text-primary">معاينة الشهادة الرسمية</span>
               </div>
               <h1 class="text-3xl font-black tracking-tight text-inverse-surface font-headline">
@@ -110,13 +127,20 @@
             </div>
 
             <div class="flex gap-3">
-              <BaseButton variant="ghost" icon-left="arrow_back" :to="`/manager/research/${id}`"
-                >رجوع للبحث</BaseButton
+              <BaseButton
+                variant="ghost"
+                icon-left="arrow_back"
+                :to="`/manager/research/${id}`"
               >
+                رجوع للبحث
+              </BaseButton>
             </div>
           </div>
 
-          <div v-if="loading" class="card-flat flex justify-center p-12">
+          <div
+            v-if="loading"
+            class="card-flat flex justify-center p-12"
+          >
             <LoadingSpinner />
           </div>
 
@@ -136,11 +160,11 @@
                     >
                       <div
                         class="absolute h-[600px] w-[600px] rounded-full border-[2px] border-primary"
-                      ></div>
+                      />
                       <div
                         class="absolute h-[400px] w-[400px] rotate-45 border-[1px] border-primary"
-                      ></div>
-                      <div class="absolute h-[200px] w-[200px] bg-primary"></div>
+                      />
+                      <div class="absolute h-[200px] w-[200px] bg-primary" />
                     </div>
 
                     <div class="relative z-10 mb-16 flex items-start justify-between">
@@ -148,7 +172,9 @@
                         <h2 class="mb-1 text-2xl font-black text-primary font-headline">
                           جمهورية مصر العربية
                         </h2>
-                        <h3 class="font-bold text-on-surface-variant">وزارة الصحة</h3>
+                        <h3 class="font-bold text-on-surface-variant">
+                          وزارة الصحة
+                        </h3>
                         <p class="text-sm text-on-surface-variant">
                           لجنة أخلاقيات البحوث الطبية (IRB)
                         </p>
@@ -161,7 +187,7 @@
                           :src="egyptUniversityLogo"
                           alt="Cairo University Logo"
                           class="w-20 h-20 object-contain p-1"
-                        />
+                        >
                       </div>
 
                       <div class="text-left">
@@ -185,7 +211,7 @@
                             :src="presidentPortrait"
                             alt="President Abdel Fattah El-Sisi"
                             class="h-full w-full object-cover"
-                          />
+                          >
                         </div>
                         <p class="text-[10px] font-bold text-on-surface-variant">
                           تحت رعاية السيد الرئيس عبد الفتاح السيسي
@@ -216,33 +242,25 @@
 
                       <div class="mx-auto mt-12 grid max-w-2xl grid-cols-2 gap-12 text-right">
                         <div>
-                          <span class="mb-1 block text-sm text-on-surface-variant"
-                            >الباحث الرئيسي</span
-                          >
+                          <span class="mb-1 block text-sm text-on-surface-variant">الباحث الرئيسي</span>
                           <span class="text-lg font-bold text-inverse-surface">{{
                             research.principal_investigator || '—'
                           }}</span>
                         </div>
                         <div>
-                          <span class="mb-1 block text-sm text-on-surface-variant"
-                            >الرقم المرجعي للمنشأة</span
-                          >
+                          <span class="mb-1 block text-sm text-on-surface-variant">الرقم المرجعي للمنشأة</span>
                           <span class="text-lg font-bold text-inverse-surface mono-nums">{{
                             research.serial_number || '—'
                           }}</span>
                         </div>
                         <div>
-                          <span class="mb-1 block text-sm text-on-surface-variant"
-                            >تاريخ الموافقة</span
-                          >
+                          <span class="mb-1 block text-sm text-on-surface-variant">تاريخ الموافقة</span>
                           <span class="text-lg font-bold text-inverse-surface mono-nums">{{
                             approvalDateDisplay
                           }}</span>
                         </div>
                         <div>
-                          <span class="mb-1 block text-sm text-on-surface-variant"
-                            >تاريخ انتهاء الصلاحية</span
-                          >
+                          <span class="mb-1 block text-sm text-on-surface-variant">تاريخ انتهاء الصلاحية</span>
                           <span class="text-lg font-bold text-inverse-surface mono-nums">{{
                             expiryDateDisplay
                           }}</span>
@@ -255,7 +273,11 @@
                     >
                       <div class="w-48 text-center">
                         <div class="mb-2 flex h-16 items-center justify-center">
-                          <AppIcon name="signature" size="xl" class="text-primary/20" />
+                          <AppIcon
+                            name="signature"
+                            size="xl"
+                            class="text-primary/20"
+                          />
                         </div>
                         <div class="border-t border-outline-variant pt-2 font-bold text-on-surface">
                           رئيس اللجنة
@@ -264,7 +286,11 @@
                       <div
                         class="flex h-32 w-32 items-center justify-center rounded-sm border-4 border-primary/10 bg-surface-container-low p-2"
                       >
-                        <AppIcon name="qr_code_2" size="2xl" class="text-primary" />
+                        <AppIcon
+                          name="qr_code_2"
+                          size="2xl"
+                          class="text-primary"
+                        />
                       </div>
                       <div class="w-48 text-center">
                         <div class="mb-2 flex h-16 items-center justify-center">
@@ -330,7 +356,10 @@
                       :disabled="generating"
                       @click="generateCertificate"
                     >
-                      <AppIcon name="verified" :filled="true" />
+                      <AppIcon
+                        name="verified"
+                        :filled="true"
+                      />
                       <span>إصدار الشهادة الرسمية</span>
                     </button>
 
@@ -357,15 +386,27 @@
                   </h4>
                   <ul class="space-y-3">
                     <li class="flex items-start gap-3 text-sm text-on-surface-variant">
-                      <AppIcon name="check_circle" :filled="true" class="mt-0.5 text-primary" />
+                      <AppIcon
+                        name="check_circle"
+                        :filled="true"
+                        class="mt-0.5 text-primary"
+                      />
                       تأكد من مطابقة عنوان البحث للبروتوكول الأصلي.
                     </li>
                     <li class="flex items-start gap-3 text-sm text-on-surface-variant">
-                      <AppIcon name="check_circle" :filled="true" class="mt-0.5 text-primary" />
+                      <AppIcon
+                        name="check_circle"
+                        :filled="true"
+                        class="mt-0.5 text-primary"
+                      />
                       التحقق من صحة أسماء الباحثين المشاركين.
                     </li>
                     <li class="flex items-start gap-3 text-sm text-on-surface-variant">
-                      <AppIcon name="check_circle" :filled="true" class="mt-0.5 text-primary" />
+                      <AppIcon
+                        name="check_circle"
+                        :filled="true"
+                        class="mt-0.5 text-primary"
+                      />
                       التأكد من تاريخ انتهاء الموافقة السنوية.
                     </li>
                   </ul>
@@ -373,21 +414,26 @@
 
                 <div class="relative h-48 overflow-hidden rounded-sm bg-inverse-surface p-8">
                   <div class="relative z-10 flex h-full flex-col justify-end">
-                    <h4 class="mb-1 text-lg font-bold text-white">دليل الأمان الرقمي</h4>
+                    <h4 class="mb-1 text-lg font-bold text-white">
+                      دليل الأمان الرقمي
+                    </h4>
                     <p class="text-sm text-slate-400">
                       يتم تأمين كل شهادة برمز تشفير فريد (Hash) لضمان عدم التلاعب.
                     </p>
                   </div>
                   <div class="absolute -top-12 -left-12 opacity-20">
-                    <div class="h-48 w-48 animate-pulse rounded-full border border-secondary"></div>
-                    <div class="absolute inset-0 m-8 rounded-full border border-primary"></div>
+                    <div class="h-48 w-48 animate-pulse rounded-full border border-secondary" />
+                    <div class="absolute inset-0 m-8 rounded-full border border-primary" />
                   </div>
                 </div>
               </div>
             </div>
           </template>
 
-          <div v-else class="card-flat p-12 text-center text-on-surface-variant">
+          <div
+            v-else
+            class="card-flat p-12 text-center text-on-surface-variant"
+          >
             تعذر تحميل بيانات الشهادة لهذا البحث.
           </div>
         </div>
@@ -402,9 +448,9 @@
         <div
           class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.03]"
         >
-          <div class="absolute h-[600px] w-[600px] rounded-full border-[2px] border-primary"></div>
-          <div class="absolute h-[400px] w-[400px] rotate-45 border-[1px] border-primary"></div>
-          <div class="absolute h-[200px] w-[200px] bg-primary"></div>
+          <div class="absolute h-[600px] w-[600px] rounded-full border-[2px] border-primary" />
+          <div class="absolute h-[400px] w-[400px] rotate-45 border-[1px] border-primary" />
+          <div class="absolute h-[200px] w-[200px] bg-primary" />
         </div>
 
         <div class="relative z-10 mb-8 flex justify-center border-b-2 border-primary/20 pb-4">
@@ -416,29 +462,37 @@
                 :src="presidentPortrait"
                 alt="President Abdel Fattah El-Sisi"
                 class="h-full w-full object-cover"
-              />
+              >
             </div>
             <p class="text-[10px] font-bold text-on-surface-variant">
               تحت رعاية السيد الرئيس عبد الفتاح السيسي
             </p>
-            <p class="text-[8px] text-on-surface-variant/70">رئيس جمهورية مصر العربية</p>
+            <p class="text-[8px] text-on-surface-variant/70">
+              رئيس جمهورية مصر العربية
+            </p>
           </div>
         </div>
 
         <div class="relative z-10 mb-16 flex items-start justify-between">
           <div class="text-right">
             <div class="flex gap-1 mb-2">
-              <div class="w-6 h-1.5 bg-[#FF0000]"></div>
+              <div class="w-6 h-1.5 bg-[#FF0000]" />
               <div
                 class="w-6 h-1.5 bg-white border-y border-slate-100 flex items-center justify-center"
               >
-                <div class="w-1 h-1 rounded-full bg-yellow-600"></div>
+                <div class="w-1 h-1 rounded-full bg-yellow-600" />
               </div>
-              <div class="w-6 h-1.5 bg-black"></div>
+              <div class="w-6 h-1.5 bg-black" />
             </div>
-            <h2 class="mb-1 text-2xl font-black text-primary font-headline">جمهورية مصر العربية</h2>
-            <h3 class="font-bold text-on-surface-variant">جامعة القاهرة</h3>
-            <p class="text-sm text-on-surface-variant">لجنة الدراسات العليا والبحوث</p>
+            <h2 class="mb-1 text-2xl font-black text-primary font-headline">
+              جمهورية مصر العربية
+            </h2>
+            <h3 class="font-bold text-on-surface-variant">
+              جامعة القاهرة
+            </h3>
+            <p class="text-sm text-on-surface-variant">
+              لجنة الدراسات العليا والبحوث
+            </p>
           </div>
           <div
             class="w-24 h-24 bg-surface-container-high rounded-sm flex items-center justify-center border border-outline-variant/20 overflow-hidden"
@@ -447,11 +501,15 @@
               :src="egyptUniversityLogo"
               alt="Cairo University Logo"
               class="w-20 h-20 object-contain p-1"
-            />
+            >
           </div>
           <div class="text-left">
-            <div class="text-lg font-bold text-primary mono-nums">{{ certificateNumber }}</div>
-            <div class="text-sm text-on-surface-variant mono-nums">{{ issueDateDisplay }}</div>
+            <div class="text-lg font-bold text-primary mono-nums">
+              {{ certificateNumber }}
+            </div>
+            <div class="text-sm text-on-surface-variant mono-nums">
+              {{ issueDateDisplay }}
+            </div>
           </div>
         </div>
 
@@ -504,7 +562,11 @@
         >
           <div class="w-48 text-center">
             <div class="mb-2 flex h-16 items-center justify-center">
-              <AppIcon name="signature" size="xl" class="text-primary/20" />
+              <AppIcon
+                name="signature"
+                size="xl"
+                class="text-primary/20"
+              />
             </div>
             <div class="border-t border-outline-variant pt-2 font-bold text-on-surface">
               رئيس اللجنة
@@ -513,11 +575,20 @@
           <div
             class="flex h-32 w-32 items-center justify-center rounded-sm border-4 border-primary/10 bg-surface-container-low p-2"
           >
-            <AppIcon name="qr_code_2" size="2xl" class="text-primary" />
+            <AppIcon
+              name="qr_code_2"
+              size="2xl"
+              class="text-primary"
+            />
           </div>
           <div class="w-48 text-center">
             <div class="mb-2 flex h-16 items-center justify-center">
-              <AppIcon name="verified_user" size="2xl" :filled="true" class="text-secondary/30" />
+              <AppIcon
+                name="verified_user"
+                size="2xl"
+                :filled="true"
+                class="text-secondary/30"
+              />
             </div>
             <div class="border-t border-outline-variant pt-2 font-bold text-on-surface">
               ختم الأمان الرقمي

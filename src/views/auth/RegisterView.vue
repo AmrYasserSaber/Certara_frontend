@@ -4,8 +4,16 @@
     <header
       class="flex items-center justify-between px-6 md:px-10 py-4 bg-surface-container-lowest border-b border-outline-variant/15"
     >
-      <router-link to="/login" class="flex items-center gap-2 text-on-surface">
-        <AppIcon name="biotech" :filled="true" size="lg" class="text-primary" />
+      <router-link
+        to="/login"
+        class="flex items-center gap-2 text-on-surface"
+      >
+        <AppIcon
+          name="biotech"
+          :filled="true"
+          size="lg"
+          class="text-primary"
+        />
         <span class="font-headline font-bold text-lg">نظام IRB الرقمي</span>
       </router-link>
       <router-link
@@ -26,12 +34,21 @@
 
         <div class="card p-6 md:p-8">
           <div class="mb-10 pt-4 pb-2">
-            <FormStepper v-model="currentStep" :steps="steps" />
+            <FormStepper
+              v-model="currentStep"
+              :steps="steps"
+            />
           </div>
 
-          <form novalidate @submit.prevent="nextOrSubmit">
+          <form
+            novalidate
+            @submit.prevent="nextOrSubmit"
+          >
             <!-- Step 1: Basic info -->
-            <section v-if="currentStep === 0" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <section
+              v-if="currentStep === 0"
+              class="grid grid-cols-1 md:grid-cols-2 gap-5"
+            >
               <BaseInput
                 v-model="form.name"
                 label="الاسم الكامل"
@@ -92,7 +109,10 @@
             </section>
 
             <!-- Step 2: Faculty & ID photos -->
-            <section v-if="currentStep === 1" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+            <section
+              v-if="currentStep === 1"
+              class="grid grid-cols-1 md:grid-cols-2 gap-5"
+            >
               <BaseSelect
                 v-model="form.faculty"
                 label="الكلية"

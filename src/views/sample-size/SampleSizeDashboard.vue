@@ -1,6 +1,12 @@
 <template>
-  <AppShellLayout page-title="الأبحاث المعلقة" active-variant="teal">
-    <div class="sample-page" dir="rtl">
+  <AppShellLayout
+    page-title="الأبحاث المعلقة"
+    active-variant="teal"
+  >
+    <div
+      class="sample-page"
+      dir="rtl"
+    >
       <header class="stats-bar">
         <div class="stats">
           <div class="stat">
@@ -21,13 +27,24 @@
           <span>الإجراء</span>
         </div>
 
-        <p v-if="loading" class="state-text">جاري تحميل الطلبات...</p>
+        <p
+          v-if="loading"
+          class="state-text"
+        >
+          جاري تحميل الطلبات...
+        </p>
 
-        <p v-else-if="!pendingRows.length" class="state-text">
+        <p
+          v-else-if="!pendingRows.length"
+          class="state-text"
+        >
           لا توجد طلبات بانتظار الحساب حالياً
         </p>
 
-        <div v-else class="rows">
+        <div
+          v-else
+          class="rows"
+        >
           <PendingResearchCard
             v-for="row in pendingRows"
             :key="row.id"

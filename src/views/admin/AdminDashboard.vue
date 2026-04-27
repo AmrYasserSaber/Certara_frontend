@@ -6,10 +6,18 @@
       description="إحصائيات المستخدمين والأبحاث مع إجراءات سريعة."
     >
       <template #actions>
-        <BaseButton variant="ghost" icon-left="how_to_reg" to="/admin/users/pending">
+        <BaseButton
+          variant="ghost"
+          icon-left="how_to_reg"
+          to="/admin/users/pending"
+        >
           عرض المستخدمين المعلقين
         </BaseButton>
-        <BaseButton variant="primary" icon-left="description" to="/admin/research">
+        <BaseButton
+          variant="primary"
+          icon-left="description"
+          to="/admin/research"
+        >
           عرض جميع الأبحاث
         </BaseButton>
       </template>
@@ -30,13 +38,24 @@
         empty-title="لا توجد طلبات معلقة"
       >
         <template #row="{ row }">
-          <td class="font-bold text-on-background">{{ row.name }}</td>
-          <td class="font-mono text-xs">{{ row.email }}</td>
+          <td class="font-bold text-on-background">
+            {{ row.name }}
+          </td>
+          <td class="font-mono text-xs">
+            {{ row.email }}
+          </td>
           <td>{{ row.department || '—' }}</td>
           <td>{{ row.faculty || '—' }}</td>
-          <td class="font-mono text-xs">{{ formatDate(row.created_at) }}</td>
+          <td class="font-mono text-xs">
+            {{ formatDate(row.created_at) }}
+          </td>
           <td>
-            <BaseButton variant="ghost" size="sm" icon-left="open_in_new" to="/admin/users/pending">
+            <BaseButton
+              variant="ghost"
+              size="sm"
+              icon-left="open_in_new"
+              to="/admin/users/pending"
+            >
               إدارة
             </BaseButton>
           </td>
