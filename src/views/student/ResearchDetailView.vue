@@ -3,7 +3,7 @@
     <template v-if="store.loading">
       <div class="flex justify-center p-12"><LoadingSpinner /></div>
     </template>
-    
+
     <template v-else-if="store.error">
       <div class="p-4 bg-error-container text-on-error-container rounded-lg">
         {{ store.error }}
@@ -19,10 +19,15 @@
           </h1>
           <div class="flex flex-wrap items-center gap-3">
             <StatusBadge :status="current.status" />
-            <span v-if="current.serial_number" class="text-sm font-mono font-bold bg-primary-container text-on-primary-container px-2 py-0.5 rounded">
+            <span
+              v-if="current.serial_number"
+              class="text-sm font-mono font-bold bg-primary-container text-on-primary-container px-2 py-0.5 rounded"
+            >
               {{ current.serial_number }}
             </span>
-            <span class="text-sm text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded flex items-center gap-1">
+            <span
+              class="text-sm text-on-surface-variant bg-surface-container-high px-2 py-0.5 rounded flex items-center gap-1"
+            >
               <AppIcon name="update" size="xs" /> {{ formatDate(current.updated_at) }}
             </span>
           </div>
@@ -40,7 +45,11 @@
           <!-- We will show the Pay button in the banner if pendingPayment exists, 
                otherwise keep the router-link as a fallback/standard way -->
           <router-link
-            v-if="['AWAITING_PAYMENT_1', 'AWAITING_PAYMENT_2'].includes(current.status?.toUpperCase()) && !pendingPayment"
+            v-if="
+              ['AWAITING_PAYMENT_1', 'AWAITING_PAYMENT_2'].includes(
+                current.status?.toUpperCase(),
+              ) && !pendingPayment
+            "
             :to="{ name: 'student.research.pay', params: { id: current.id } }"
           >
             <BaseButton variant="primary" icon="payments">إكمال الدفع</BaseButton>
@@ -49,20 +58,28 @@
       </div>
 
       <!-- Payment Alert Banner -->
-      <div v-if="pendingPayment && pendingPayment.checkout_url" class="p-5 bg-primary/10 text-primary rounded-xl border border-primary/20 flex flex-col md:flex-row justify-between items-center gap-4 mb-6 shadow-sm border-dashed">
+      <div
+        v-if="pendingPayment && pendingPayment.checkout_url"
+        class="p-5 bg-primary/10 text-primary rounded-xl border border-primary/20 flex flex-col md:flex-row justify-between items-center gap-4 mb-6 shadow-sm border-dashed"
+      >
         <div class="flex items-center gap-4">
           <div class="bg-primary text-on-primary p-3 rounded-xl shadow-lg animate-pulse">
             <AppIcon name="payments" size="lg" />
           </div>
           <div>
-            <h3 class="font-bold text-lg">مطلوب سداد رسوم ({{ pendingPayment.type === 'first' ? 'مبدئية' : 'مراجعة' }})</h3>
-            <p class="text-sm opacity-90">يرجى إتمام عملية الدفع للانتقال للخطوة التالية. المبلغ: <span class="font-bold font-mono">{{ pendingPayment.amount }} EGP</span></p>
+            <h3 class="font-bold text-lg">
+              مطلوب سداد رسوم ({{ pendingPayment.type === 'first' ? 'مبدئية' : 'مراجعة' }})
+            </h3>
+            <p class="text-sm opacity-90">
+              يرجى إتمام عملية الدفع للانتقال للخطوة التالية. المبلغ:
+              <span class="font-bold font-mono">{{ pendingPayment.amount }} EGP</span>
+            </p>
           </div>
         </div>
         <div class="flex gap-2">
-           <a :href="pendingPayment.checkout_url" target="_blank">
-             <BaseButton variant="primary" icon-left="bolt" size="lg">سداد الرسوم الآن</BaseButton>
-           </a>
+          <a :href="pendingPayment.checkout_url" target="_blank">
+            <BaseButton variant="primary" icon-left="bolt" size="lg">سداد الرسوم الآن</BaseButton>
+          </a>
         </div>
       </div>
 
@@ -72,8 +89,11 @@
       </BaseCard>
 
       <!-- Reviewer Comments Block -->
-      <div v-if="current.status === 'REVISION_REQUESTED' && comments.length" class="mb-6">
-        <ReviewerComments :comments="comments" />
+      <div
+        v-if="current.status?.toUpperCase() === 'REVISION_REQUESTED' && reviewRounds.length"
+        class="mb-6"
+      >
+        <ReviewerComments :review-rounds="reviewRounds" />
       </div>
 
       <!-- Research Details -->
@@ -83,7 +103,9 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-y-4 gap-x-6">
               <div>
                 <p class="text-xs text-on-surface-variant font-bold mb-1">الباحث الرئيسي</p>
-                <p class="text-sm font-medium text-on-surface">{{ current.principal_investigator }}</p>
+                <p class="text-sm font-medium text-on-surface">
+                  {{ current.principal_investigator }}
+                </p>
               </div>
               <div v-if="current.co_investigators">
                 <p class="text-xs text-on-surface-variant font-bold mb-1">الباحثون المشاركون</p>
@@ -103,22 +125,36 @@
           <!-- Documents List -->
           <BaseCard title="المستندات المرفقة" icon="folder">
             <div class="divide-y divide-outline-variant/20">
-              <div v-for="doc in documents" :key="doc.id" class="py-3 flex items-center justify-between">
+              <div
+                v-for="doc in documents"
+                :key="doc.id"
+                class="py-3 flex items-center justify-between"
+              >
                 <div class="flex items-center gap-3">
                   <div class="bg-primary/10 text-primary p-2 rounded-lg">
                     <AppIcon name="picture_as_pdf" />
                   </div>
                   <div>
-                    <p class="font-bold text-sm text-on-surface">{{ getDocumentTypeName(doc.type) }}</p>
+                    <p class="font-bold text-sm text-on-surface">
+                      {{ getDocumentTypeName(doc.type) }}
+                    </p>
                     <p class="text-xs text-on-surface-variant">{{ doc.original_name }}</p>
                   </div>
                 </div>
-                <a :href="getFileUrl(doc.file_path)" target="_blank" class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors" title="تحميل">
+                <a
+                  :href="getFileUrl(doc.file_path)"
+                  target="_blank"
+                  class="text-primary hover:bg-primary/10 p-2 rounded-full transition-colors"
+                  title="تحميل"
+                >
                   <AppIcon name="download" />
                 </a>
               </div>
             </div>
-            <div v-if="!documents || documents.length === 0" class="text-center py-4 text-on-surface-variant text-sm">
+            <div
+              v-if="!documents || documents.length === 0"
+              class="text-center py-4 text-on-surface-variant text-sm"
+            >
               لم يتم العثور على مستندات.
             </div>
           </BaseCard>
@@ -127,28 +163,46 @@
         <!-- Sidebar Activity / Payment History -->
         <div class="space-y-6">
           <BaseCard title="سجل الدفع" icon="receipt">
-             <div v-if="payments && payments.length > 0" class="space-y-3">
-                <div v-for="payment in payments" :key="payment.id" class="p-3 border border-outline-variant/30 rounded-lg flex flex-col gap-2">
-                  <div class="flex justify-between">
-                    <span class="text-xs font-bold">{{ payment.type === 'first' ? 'رسوم مبدئية' : 'رسوم المراجعة' }}</span>
-                    <span class="text-xs font-mono" :class="payment.status === 'paid' ? 'text-success' : 'text-warning'">{{ payment.status }}</span>
-                  </div>
-                  <div class="flex justify-between items-end">
-                    <span class="font-mono font-bold text-lg">{{ payment.amount }} EGP</span>
-                    <div class="flex gap-2">
-                      <a v-if="payment.status === 'pending' && payment.checkout_url" :href="payment.checkout_url" target="_blank">
-                        <BaseButton variant="primary" size="sm" icon="payments">ادفع الآن</BaseButton>
-                      </a>
-                      <router-link v-if="payment.status === 'paid'" :to="`/student/research/${current.id}/receipt?paymentId=${payment.id}`" class="text-xs text-primary font-bold hover:underline flex items-center gap-1">
-                        عرض الإيصال
-                      </router-link>
-                    </div>
+            <div v-if="payments && payments.length > 0" class="space-y-3">
+              <div
+                v-for="payment in payments"
+                :key="payment.id"
+                class="p-3 border border-outline-variant/30 rounded-lg flex flex-col gap-2"
+              >
+                <div class="flex justify-between">
+                  <span class="text-xs font-bold">{{
+                    payment.type === 'first' ? 'رسوم مبدئية' : 'رسوم المراجعة'
+                  }}</span>
+                  <span
+                    class="text-xs font-mono"
+                    :class="payment.status === 'paid' ? 'text-success' : 'text-warning'"
+                    >{{ payment.status }}</span
+                  >
+                </div>
+                <div class="flex justify-between items-end">
+                  <span class="font-mono font-bold text-lg">{{ payment.amount }} EGP</span>
+                  <div class="flex gap-2">
+                    <a
+                      v-if="payment.status === 'pending' && payment.checkout_url"
+                      :href="payment.checkout_url"
+                      target="_blank"
+                    >
+                      <BaseButton variant="primary" size="sm" icon="payments">ادفع الآن</BaseButton>
+                    </a>
+                    <router-link
+                      v-if="payment.status === 'paid'"
+                      :to="`/student/research/${current.id}/receipt?paymentId=${payment.id}`"
+                      class="text-xs text-primary font-bold hover:underline flex items-center gap-1"
+                    >
+                      عرض الإيصال
+                    </router-link>
                   </div>
                 </div>
-             </div>
-             <div v-else class="text-center py-4 text-on-surface-variant text-sm">
-               لا يوجد سجل دفع حتى الآن.
-             </div>
+              </div>
+            </div>
+            <div v-else class="text-center py-4 text-on-surface-variant text-sm">
+              لا يوجد سجل دفع حتى الآن.
+            </div>
           </BaseCard>
         </div>
       </div>
@@ -170,31 +224,31 @@ import LoadingSpinner from '@/components/shared/LoadingSpinner.vue';
 import { formatDate } from '@/utils/helpers';
 
 const props = defineProps({
-  id: { type: [String, Number], required: true }
+  id: { type: [String, Number], required: true },
 });
 
 const store = useResearchStore();
 
 // Some structured data placeholders depending on what is returned by fetchOne
 const documents = ref([]);
-const comments = ref([]);
+const reviewRounds = ref([]);
 const payments = ref([]);
 
 onMounted(async () => {
   try {
     const data = await store.fetchOne(props.id);
-    if(data) {
+    if (data) {
       documents.value = data.documents || [];
-      comments.value = data.reviewer_comments || []; // Assumption of API response
+      reviewRounds.value = data.review_rounds || [];
       payments.value = data.payments || []; // Assumption of API response
     }
-  } catch(e) {}
+  } catch (e) {}
 });
 
 const current = computed(() => store.current);
 
 const pendingPayment = computed(() => {
-  return payments.value.find(p => p.status === 'pending');
+  return payments.value.find((p) => p.status === 'pending');
 });
 
 function getDocumentTypeName(type) {
@@ -203,7 +257,7 @@ function getDocumentTypeName(type) {
     application: 'نموذج التقديم',
     coi: 'تضارب المصالح',
     checklist: 'قائمة المراجعة',
-    consent: 'الموافقة المستنيرة'
+    consent: 'الموافقة المستنيرة',
   };
   return map[type] || type;
 }

@@ -53,14 +53,16 @@
 
             <ResearchDocumentList :documents="documents" />
 
-            <CommentThread :comments="comments" />
+            <ReviewRoundsTimeline v-if="viewMode === 'archived'" :review-rounds="reviewRounds" />
 
-            <CommentComposer :submit-action="submitComment" @comment-added="refreshDetail" />
-
-            <DecisionPanel
-              :submit-action="submitDecision"
-              @decision-submitted="onDecisionSubmitted"
-            />
+            <template v-else>
+              <CommentThread :comments="comments" />
+              <CommentComposer :submit-action="submitComment" @comment-added="refreshDetail" />
+              <DecisionPanel
+                :submit-action="submitDecision"
+                @decision-submitted="onDecisionSubmitted"
+              />
+            </template>
           </template>
 
           <p v-else-if="loading" class="state-text">جاري تحميل بيانات البحث...</p>
@@ -103,12 +105,14 @@ import CommentComposer from '@/components/reviewer/CommentComposer.vue';
 import CommentThread from '@/components/reviewer/CommentThread.vue';
 import DecisionPanel from '@/components/reviewer/DecisionPanel.vue';
 import ResearchDocumentList from '@/components/reviewer/ResearchDocumentList.vue';
+import ReviewRoundsTimeline from '@/components/reviewer/ReviewRoundsTimeline.vue';
 import { useToast } from '@/composables/useToast';
 import { useReviewStore } from '@/stores/review.store';
 
 const router = useRouter();
 const toast = useToast();
 const reviewStore = useReviewStore();
+const viewMode = ref('active');
 
 const selectedId = ref(null);
 const loading = computed(() => reviewStore.loading);
@@ -120,9 +124,12 @@ const documents = computed(() =>
   Array.isArray(selectedReview.value?.documents) ? selectedReview.value.documents : [],
 );
 const comments = computed(() => selectedReview.value?.comments || []);
+const reviewRounds = computed(() => selectedReview.value?.review_rounds || []);
 
 onMounted(async () => {
   try {
+    const query = router.currentRoute.value?.query ?? {};
+    viewMode.value = query.mode === 'archived' ? 'archived' : 'active';
     await reviewStore.fetchAssigned();
     if (assignedReviews.value.length > 0) {
       await selectResearch(assignedReviews.value[0].id);
@@ -135,7 +142,7 @@ onMounted(async () => {
 async function selectResearch(researchId) {
   selectedId.value = researchId;
   try {
-    await reviewStore.fetchOne(researchId);
+    await reviewStore.fetchOne(researchId, viewMode.value === 'archived');
   } catch {
     toast.error('تعذر تحميل تفاصيل البحث');
   }
@@ -143,11 +150,12 @@ async function selectResearch(researchId) {
 
 async function refreshDetail() {
   if (!selectedId.value) return;
-  await reviewStore.fetchOne(selectedId.value);
+  await reviewStore.fetchOne(selectedId.value, viewMode.value === 'archived');
 }
 
 async function submitComment(text) {
   if (!selectedId.value) return null;
+  if (viewMode.value === 'archived') return null;
   const created = await reviewStore.addComment(selectedId.value, text);
   toast.success('تم إضافة التعليق');
   return created;
@@ -155,6 +163,7 @@ async function submitComment(text) {
 
 async function submitDecision(decision, comment) {
   if (!selectedId.value) return;
+  if (viewMode.value === 'archived') return;
   await reviewStore.submitDecision(selectedId.value, decision, comment);
 }
 
