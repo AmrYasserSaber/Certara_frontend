@@ -42,4 +42,10 @@ export default [
     meta: { roles: [ROLES.STUDENT] },
     props: true,
   },
+  {
+    path: '/student/research/approved',
+    name: 'student.research.approved',
+    component: () => import('@/views/student/ApprovedResearchView.vue'),
+    meta: { roles: [ROLES.STUDENT] },
+  },
 ];

@@ -20,7 +20,7 @@
     <div class="p-6 space-y-4">
       <div class="flex flex-col gap-1 text-center mb-6">
         <span class="text-on-surface-variant text-sm">المبلغ المدفوع</span>
-        <span class="text-3xl font-bold font-mono text-on-surface">{{ amount }} EGP</span>
+        <span class="text-3xl font-bold font-mono text-on-surface">{{ amount }} ج.م</span>
       </div>
 
       <div class="space-y-3">
@@ -38,7 +38,7 @@
         </div>
         <div class="flex justify-between items-center text-sm">
           <span class="text-on-surface-variant">رقم البحث</span>
-          <span class="font-mono font-bold text-primary">{{ serialNumber || 'N/A' }}</span>
+          <span class="font-mono font-bold text-primary">{{ serialNumber || 'غير متوفر' }}</span>
         </div>
       </div>
     </div>

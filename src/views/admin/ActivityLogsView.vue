@@ -91,6 +91,22 @@ import BasePagination from '@/components/shared/BasePagination.vue';
 import adminService from '@/services/admin.service';
 import { useToast } from '@/composables/useToast';
 import { formatDate } from '@/utils/helpers';
+const ACTION_LABELS_AR = {
+  'admin.user_activated': 'تفعيل مستخدم',
+  'admin.user_rejected': 'رفض مستخدم',
+  'admin.reviewer_assigned': 'تعيين مراجع',
+  'admin.serial_generated': 'توليد رقم تسلسلي',
+  'admin.research_pending_activation': 'بحث بانتظار التفعيل',
+  'manager.decision_recorded': 'تسجيل قرار المدير',
+  'manager.certificate_issued': 'إصدار شهادة',
+  'reviewer.decision_submitted': 'تقديم قرار المراجع',
+  'certificate.generated': 'إصدار شهادة',
+};
+
+const TARGET_TYPE_LABELS_AR = {
+  research: 'بحث',
+  user: 'مستخدم',
+};
 
 const toast = useToast();
 

@@ -20,6 +20,7 @@
         :title="pageTitle"
         :user="topbarUser"
         :dark="darkTopbar"
+        :show-language="showLanguage"
         @toggle-sidebar="sidebarOpen = !sidebarOpen"
         @logout="onLogout"
       />
@@ -65,6 +66,10 @@ const topbarUser = computed(() =>
       }
     : null,
 );
+const showLanguage = computed(() => {
+  const role = auth.user?.role;
+  return role !== ROLES.ADMIN && role !== ROLES.MANAGER;
+});
 
 const navItems = computed(() => props.navItems ?? buildDefaultNav(auth.user?.role));
 const footerItems = computed(
@@ -86,6 +91,7 @@ function buildDefaultNav(role) {
       return [
         { to: '/student', label: 'لوحة القيادة', icon: 'dashboard' },
         { to: '/student/research/new', label: 'تقديم بروتوكول جديد', icon: 'add_circle' },
+        { to: '/student/research/approved', label: 'الأبحاث المعتمدة', icon: 'verified' },
       ];
     case ROLES.SAMPLE_SIZE_OFFICER:
       return [{ to: '/sample-size', label: 'الأبحاث المعلقة', icon: 'dashboard' }];
@@ -99,7 +105,10 @@ function buildDefaultNav(role) {
         { to: '/admin/logs', label: 'سجل النشاط', icon: 'history' },
       ];
     case ROLES.MANAGER:
-      return [{ to: '/manager', label: 'لوحة القيادة', icon: 'dashboard' }];
+      return [
+        { to: '/manager', label: 'لوحة القيادة', icon: 'dashboard' },
+        { to: '/manager/certificates', label: 'الشهادات المعتمدة', icon: 'verified' },
+      ];
     default:
       return [];
   }

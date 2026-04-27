@@ -29,7 +29,7 @@
             />
           </div>
           <div class="leading-tight">
-            <p class="font-headline font-extrabold tex t-on-background text-lg">
+            <p class="font-headline font-extrabold text-on-background text-lg">
               نظام IRB الرقمي
             </p>
             <p class="text-xs text-on-surface-variant">
@@ -207,7 +207,7 @@
                       />
                       <span class="text-sm font-headline font-bold">بانتظار الدفع الأول</span>
                     </div>
-                    <span class="badge badge-warning">awaiting_payment_1</span>
+                    <span class="badge badge-warning">بانتظار الدفع الأول</span>
                   </div>
 
                   <div class="h-2 rounded-full bg-surface-container-high overflow-hidden">

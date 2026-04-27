@@ -37,7 +37,7 @@
             {{ calculatedSize || 0 }} مشارك
           </div>
 
-          <label class="label">قيمة الرسوم (EGP)</label>
+          <label class="label">قيمة الرسوم (ج.م)</label>
           <input
             v-model.number="feeAmount"
             class="input"

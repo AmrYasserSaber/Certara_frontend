@@ -1,8 +1,5 @@
 <template>
-  <AppShellLayout
-    page-title="لوحة مدير اللجنة"
-    :nav-items="managerNavItems"
-  >
+  <AppShellLayout page-title="لوحة مدير اللجنة">
     <SectionHeader
       eyebrow="المدير"
       title="طلبات بانتظار القرار النهائي"
@@ -116,7 +113,6 @@ const page = ref(1);
 const limit = ref(20);
 const total = ref(0);
 
-const managerNavItems = [{ to: '/manager', label: 'لوحة التحكم', icon: 'dashboard' }];
 
 const statsItems = computed(() => [
   {
@@ -139,13 +135,6 @@ const statsItems = computed(() => [
     value: Number(stats.value.rejected || 0),
     icon: 'cancel',
     variant: 'error',
-  },
-  {
-    key: 'issuance_rate',
-    label: 'معدل الإصدار',
-    value: `${Number(stats.value.issuance_rate || 0)}%`,
-    icon: 'speed',
-    variant: 'info',
   },
 ]);
 

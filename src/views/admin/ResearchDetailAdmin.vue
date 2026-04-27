@@ -6,28 +6,23 @@
       description="عرض كامل للبحث، بيانات الطالب، المستندات، السداد، وخط زمني للحالة."
     >
       <template #actions>
+        <BaseButton variant="ghost" icon-left="arrow_back" to="/admin/research"> رجوع </BaseButton>
         <BaseButton
-          variant="ghost"
-          icon-left="arrow_back"
-          to="/admin/research"
-        >
-          رجوع
-        </BaseButton>
-        <BaseButton
+          v-if="research?.status === RESEARCH_STATUS.IN_REVIEW"
           variant="secondary"
           icon-left="person_add"
           @click="assignModalOpen = true"
         >
-          Assign Reviewer
+          تعيين مراجع
         </BaseButton>
         <BaseButton
-          v-if="research?.status === 'pending_activation'"
+          v-if="research?.status === RESEARCH_STATUS.PENDING_ACTIVATION"
           variant="primary"
           icon-left="tag"
           :loading="serialLoading"
           @click="generateSerial"
         >
-          Generate Serial
+          توليد رقم تسلسلي
         </BaseButton>
       </template>
     </SectionHeader>
@@ -108,7 +103,7 @@
               class="flex items-center justify-between p-3 rounded-lg bg-surface-container-low hover:bg-surface-container-high transition-colors"
             >
               <div>
-                <p class="font-bold text-sm">{{ doc.type || 'document' }}</p>
+                <p class="font-bold text-sm">{{ doc.type || 'مستند' }}</p>
                 <p class="text-xs text-on-surface-variant font-mono">
                   {{ doc.original_name || doc.file_path }}
                 </p>
@@ -200,6 +195,7 @@ import ResearchTimeline from '@/components/shared/ResearchTimeline.vue';
 import adminService from '@/services/admin.service';
 import { formatDate } from '@/utils/helpers';
 import { useToast } from '@/composables/useToast';
+import { RESEARCH_STATUS } from '@/utils/constants';
 
 const props = defineProps({ id: { type: [String, Number], required: true } });
 
