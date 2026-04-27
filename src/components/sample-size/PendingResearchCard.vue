@@ -1,6 +1,13 @@
 <template>
-  <article class="pending-card" dir="rtl">
-    <button class="row-header" type="button" @click="$emit('toggle', item.id)">
+  <article
+    class="pending-card"
+    dir="rtl"
+  >
+    <button
+      class="row-header"
+      type="button"
+      @click="$emit('toggle', item.id)"
+    >
       <span class="cell id">{{ item.serial_number || item.id }}</span>
       <span class="cell title">{{ item.title }}</span>
       <span class="cell department">{{ item.department || 'غير محدد' }}</span>
@@ -10,7 +17,10 @@
       </span>
     </button>
 
-    <section v-if="expanded" class="expanded">
+    <section
+      v-if="expanded"
+      class="expanded"
+    >
       <div class="expanded-grid">
         <div class="form-panel">
           <h4>إدخال حجم العينة المعتمد</h4>
@@ -22,8 +32,10 @@
             type="number"
             min="1"
             placeholder="مثال: 384"
-          />
-          <div class="big-number">{{ calculatedSize || 0 }} مشارك</div>
+          >
+          <div class="big-number">
+            {{ calculatedSize || 0 }} مشارك
+          </div>
 
           <label class="label">قيمة الرسوم (ج.م)</label>
           <input
@@ -33,7 +45,7 @@
             min="0.01"
             step="0.01"
             placeholder="500.00"
-          />
+          >
 
           <label class="label">ملاحظات الحساب المنهجي (اختياري)</label>
           <textarea

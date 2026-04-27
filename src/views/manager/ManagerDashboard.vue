@@ -8,12 +8,22 @@
 
     <DashboardStatsGrid :items="statsItems" />
 
-    <BaseCard title="قائمة الأبحاث الجاهزة للقرار" icon="fact_check" class="mt-6">
-      <div v-if="loading" class="py-16 flex justify-center">
+    <BaseCard
+      title="قائمة الأبحاث الجاهزة للقرار"
+      icon="fact_check"
+      class="mt-6"
+    >
+      <div
+        v-if="loading"
+        class="py-16 flex justify-center"
+      >
         <LoadingSpinner />
       </div>
 
-      <div v-else-if="queue.length" class="space-y-4">
+      <div
+        v-else-if="queue.length"
+        class="space-y-4"
+      >
         <article
           v-for="item in queue"
           :key="item.id"
@@ -62,7 +72,10 @@
         </article>
       </div>
 
-      <div v-else class="py-12 text-center text-on-surface-variant">
+      <div
+        v-else
+        class="py-12 text-center text-on-surface-variant"
+      >
         لا توجد أبحاث بانتظار القرار النهائي حاليًا.
       </div>
 

@@ -286,22 +286,22 @@
         <div
           class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.03]"
         >
-          <div class="absolute h-[600px] w-[600px] rounded-full border-[2px] border-primary"></div>
-          <div class="absolute h-[400px] w-[400px] rotate-45 border-[1px] border-primary"></div>
-          <div class="absolute h-[200px] w-[200px] bg-primary"></div>
+          <div class="absolute h-[600px] w-[600px] rounded-full border-[2px] border-primary" />
+          <div class="absolute h-[400px] w-[400px] rotate-45 border-[1px] border-primary" />
+          <div class="absolute h-[200px] w-[200px] bg-primary" />
         </div>
 
 
         <div class="relative z-10 mb-16 flex items-start justify-between">
           <div class="text-right">
             <div class="flex gap-1 mb-2">
-              <div class="w-6 h-1.5 bg-[#FF0000]"></div>
+              <div class="w-6 h-1.5 bg-[#FF0000]" />
               <div
                 class="w-6 h-1.5 bg-white border-y border-slate-100 flex items-center justify-center"
               >
-                <div class="w-1 h-1 rounded-full bg-yellow-600"></div>
+                <div class="w-1 h-1 rounded-full bg-yellow-600" />
               </div>
-              <div class="w-6 h-1.5 bg-black"></div>
+              <div class="w-6 h-1.5 bg-black" />
             </div>
             <h2 class="mb-1 text-2xl font-black text-primary font-headline">جمهورية مصر العربية</h2>
             <h3 class="font-bold text-on-surface-variant">وزارة الصحة والسكان</h3>
@@ -314,11 +314,15 @@
               :src="egyptUniversityLogo"
               alt="Logo"
               class="w-20 h-20 object-contain p-1"
-            />
+            >
           </div>
           <div class="text-left">
-            <div class="text-lg font-bold text-primary mono-nums">{{ certificateNumber }}</div>
-            <div class="text-sm text-on-surface-variant mono-nums">{{ issueDateDisplay }}</div>
+            <div class="text-lg font-bold text-primary mono-nums">
+              {{ certificateNumber }}
+            </div>
+            <div class="text-sm text-on-surface-variant mono-nums">
+              {{ issueDateDisplay }}
+            </div>
           </div>
         </div>
 

@@ -2,8 +2,12 @@
   <article class="card-flat p-4 space-y-3">
     <div class="flex items-start justify-between gap-3">
       <div>
-        <h4 class="font-bold text-on-background">{{ user?.name || '—' }}</h4>
-        <p class="text-xs text-on-surface-variant font-mono">{{ user?.email || '—' }}</p>
+        <h4 class="font-bold text-on-background">
+          {{ user?.name || '—' }}
+        </h4>
+        <p class="text-xs text-on-surface-variant font-mono">
+          {{ user?.email || '—' }}
+        </p>
       </div>
       <StatusBadge :status="user?.status || 'pending'" />
     </div>
@@ -21,7 +25,12 @@
     </div>
 
     <div class="flex flex-wrap items-center gap-2">
-      <BaseButton variant="ghost" size="sm" icon-left="badge" @click="$emit('view-id', user)">
+      <BaseButton
+        variant="ghost"
+        size="sm"
+        icon-left="badge"
+        @click="$emit('view-id', user)"
+      >
         عرض الهوية
       </BaseButton>
 
@@ -36,7 +45,11 @@
       </BaseButton>
 
       <div class="flex-1 min-w-[220px] flex items-center gap-2">
-        <BaseInput v-model="localReason" placeholder="سبب الرفض (اختياري)" class="w-full" />
+        <BaseInput
+          v-model="localReason"
+          placeholder="سبب الرفض (اختياري)"
+          class="w-full"
+        />
         <BaseButton
           variant="danger"
           size="sm"

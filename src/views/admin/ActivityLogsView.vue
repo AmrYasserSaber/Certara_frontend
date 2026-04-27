@@ -13,28 +13,59 @@
           label="الإجراء"
           placeholder="مثال: admin.serial_generated"
         />
-        <BaseInput v-model="filters.target_type" label="نوع الهدف" placeholder="بحث / مستخدم" />
-        <BaseInput v-model="filters.actor_id" label="رقم الفاعل" placeholder="مثال: 1" />
+        <BaseInput
+          v-model="filters.target_type"
+          label="نوع الهدف"
+          placeholder="research / user"
+        />
+        <BaseInput
+          v-model="filters.actor_id"
+          label="رقم الفاعل"
+          placeholder="مثال: 1"
+        />
         <div class="flex items-end gap-2">
-          <BaseButton variant="ghost" icon-left="restart_alt" @click="resetFilters">
+          <BaseButton
+            variant="ghost"
+            icon-left="restart_alt"
+            @click="resetFilters"
+          >
             إعادة
           </BaseButton>
-          <BaseButton variant="primary" icon-left="search" @click="applyFilters"> بحث </BaseButton>
+          <BaseButton
+            variant="primary"
+            icon-left="search"
+            @click="applyFilters"
+          >
+            بحث
+          </BaseButton>
         </div>
       </div>
     </div>
 
-    <BaseTable :columns="columns" :rows="logs" :loading="loading" empty-title="لا يوجد نشاط مطابق">
+    <BaseTable
+      :columns="columns"
+      :rows="logs"
+      :loading="loading"
+      empty-title="لا يوجد نشاط مطابق"
+    >
       <template #row="{ row }">
-        <td>{{ row.actor_name || `مستخدم #${row.actor_id || '-'}` }}</td>
-        <td class="text-sm">{{ ACTION_LABELS_AR[row.action] || row.action }}</td>
+        <td>{{ row.actor_name || `User #${row.actor_id || '-'}` }}</td>
+        <td class="font-mono text-xs">
+          {{ row.action }}
+        </td>
         <td>
           <div class="text-sm">
-            <p class="font-bold">{{ TARGET_TYPE_LABELS_AR[row.target_type] || row.target_type || '—' }}</p>
-            <p class="text-xs text-on-surface-variant font-mono">#{{ row.target_id || '—' }}</p>
+            <p class="font-bold">
+              {{ row.target_type || '—' }}
+            </p>
+            <p class="text-xs text-on-surface-variant font-mono">
+              #{{ row.target_id || '—' }}
+            </p>
           </div>
         </td>
-        <td class="font-mono text-xs">{{ formatDate(row.created_at, 'DD/MM/YYYY HH:mm') }}</td>
+        <td class="font-mono text-xs">
+          {{ formatDate(row.created_at, 'DD/MM/YYYY HH:mm') }}
+        </td>
       </template>
 
       <template #footer>

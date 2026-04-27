@@ -14,11 +14,17 @@
       empty-description="كل الحسابات تمت معالجتها حاليًا."
     >
       <template #row="{ row }">
-        <td class="font-bold text-on-background">{{ row.name }}</td>
-        <td class="font-mono text-xs">{{ row.email }}</td>
+        <td class="font-bold text-on-background">
+          {{ row.name }}
+        </td>
+        <td class="font-mono text-xs">
+          {{ row.email }}
+        </td>
         <td>{{ row.department || '—' }}</td>
         <td>{{ row.faculty || '—' }}</td>
-        <td class="font-mono text-xs">{{ formatDate(row.created_at) }}</td>
+        <td class="font-mono text-xs">
+          {{ formatDate(row.created_at) }}
+        </td>
         <td class="min-w-[420px]">
           <UserActivationCard
             compact
@@ -44,27 +50,45 @@
       </template>
     </BaseTable>
 
-    <BaseModal v-model="idModalOpen" title="صور الهوية" size="lg">
+    <BaseModal
+      v-model="idModalOpen"
+      title="صور الهوية"
+      size="lg"
+    >
       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
         <div class="card-flat p-4">
-          <h4 class="font-bold mb-2">الوجه الأمامي</h4>
+          <h4 class="font-bold mb-2">
+            الوجه الأمامي
+          </h4>
           <img
             v-if="selectedIdentity.front"
             :src="selectedIdentity.front"
             alt="front-id"
             class="w-full h-64 object-contain rounded-lg bg-surface-container-low"
-          />
-          <p v-else class="text-sm text-on-surface-variant">لا توجد صورة أمامية.</p>
+          >
+          <p
+            v-else
+            class="text-sm text-on-surface-variant"
+          >
+            لا توجد صورة أمامية.
+          </p>
         </div>
         <div class="card-flat p-4">
-          <h4 class="font-bold mb-2">الوجه الخلفي</h4>
+          <h4 class="font-bold mb-2">
+            الوجه الخلفي
+          </h4>
           <img
             v-if="selectedIdentity.back"
             :src="selectedIdentity.back"
             alt="back-id"
             class="w-full h-64 object-contain rounded-lg bg-surface-container-low"
-          />
-          <p v-else class="text-sm text-on-surface-variant">لا توجد صورة خلفية.</p>
+          >
+          <p
+            v-else
+            class="text-sm text-on-surface-variant"
+          >
+            لا توجد صورة خلفية.
+          </p>
         </div>
       </div>
     </BaseModal>

@@ -1,5 +1,8 @@
 <template>
-  <form @submit.prevent="submitForm" class="space-y-6">
+  <form
+    class="space-y-6"
+    @submit.prevent="submitForm"
+  >
     <BaseInput
       v-model="formData.title"
       label="عنوان البحث"
@@ -41,10 +44,17 @@
     />
 
     <div class="flex justify-end gap-3 mt-8">
-      <BaseButton type="button" variant="outline" @click="$emit('cancel')">
+      <BaseButton
+        type="button"
+        variant="outline"
+        @click="$emit('cancel')"
+      >
         إلغاء
       </BaseButton>
-      <BaseButton type="submit" variant="primary">
+      <BaseButton
+        type="submit"
+        variant="primary"
+      >
         حفظ وانتقال للمستندات
       </BaseButton>
     </div>

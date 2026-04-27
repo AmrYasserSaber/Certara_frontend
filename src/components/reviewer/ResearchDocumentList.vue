@@ -1,11 +1,25 @@
 <template>
   <section class="doc-list">
-    <h3 class="title">المستندات المرفقة</h3>
+    <h3 class="title">
+      المستندات المرفقة
+    </h3>
 
-    <p v-if="!documents.length" class="empty">لا توجد مستندات مرفقة.</p>
+    <p
+      v-if="!documents.length"
+      class="empty"
+    >
+      لا توجد مستندات مرفقة.
+    </p>
 
-    <ul v-else class="items">
-      <li v-for="doc in documents" :key="doc.id" class="item">
+    <ul
+      v-else
+      class="items"
+    >
+      <li
+        v-for="doc in documents"
+        :key="doc.id"
+        class="item"
+      >
         <div class="meta">
           <strong class="name">{{ doc.original_name || doc.file_name || 'ملف مرفق' }}</strong>
           <span class="type">{{ doc.type || 'document' }}</span>
@@ -17,7 +31,11 @@
           rel="noopener noreferrer"
           class="download-link"
         >
-          <BaseButton variant="outline" size="sm" icon-left="download">تنزيل</BaseButton>
+          <BaseButton
+            variant="outline"
+            size="sm"
+            icon-left="download"
+          >تنزيل</BaseButton>
         </a>
       </li>
     </ul>

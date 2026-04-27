@@ -24,7 +24,10 @@
         />
       </div>
 
-      <div v-else-if="currentStep === 2" class="space-y-6">
+      <div
+        v-else-if="currentStep === 2"
+        class="space-y-6"
+      >
         <SectionHeader
           title="مراجعة التقديم"
           description="يرجى مراجعة تفاصيل البحث الخاصة بك قبل التقديم النهائي."
@@ -33,25 +36,45 @@
         
         <div class="p-4 bg-surface-container-lowest rounded-lg border border-outline-variant/30 space-y-2">
           <p class="font-bold flex items-center gap-2">
-            <AppIcon name="title" size="sm" class="text-primary"/> 
+            <AppIcon
+              name="title"
+              size="sm"
+              class="text-primary"
+            /> 
             العنوان: <span class="font-normal">{{ researchData.title }}</span>
           </p>
           <p class="font-bold flex items-center gap-2">
-            <AppIcon name="person" size="sm" class="text-primary"/> 
+            <AppIcon
+              name="person"
+              size="sm"
+              class="text-primary"
+            /> 
             الباحث الرئيسي: <span class="font-normal">{{ researchData.principal_investigator }}</span>
           </p>
           <p class="font-bold flex items-center gap-2">
-            <AppIcon name="account_balance" size="sm" class="text-primary"/> 
+            <AppIcon
+              name="account_balance"
+              size="sm"
+              class="text-primary"
+            /> 
             الجهة: <span class="font-normal">{{ researchData.faculty }} - {{ researchData.department }}</span>
           </p>
         </div>
 
-        <div v-if="error" class="p-4 rounded-lg bg-error-container text-on-error-container text-sm font-medium">
+        <div
+          v-if="error"
+          class="p-4 rounded-lg bg-error-container text-on-error-container text-sm font-medium"
+        >
           {{ error }}
         </div>
 
         <div class="flex justify-end gap-3 mt-8">
-          <BaseButton type="button" variant="outline" @click="currentStep--" :disabled="saving">
+          <BaseButton
+            type="button"
+            variant="outline"
+            :disabled="saving"
+            @click="currentStep--"
+          >
             عودة
           </BaseButton>
           <BaseButton

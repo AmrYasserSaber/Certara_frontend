@@ -1,9 +1,18 @@
 <template>
   <AppShellLayout page-title="دفع الرسوم">
     <div class="max-w-2xl mx-auto space-y-6">
-      
-      <div v-if="store.loading" class="flex justify-center p-12"><LoadingSpinner /></div>
-      <div v-else-if="store.error" class="p-4 bg-error-container text-on-error-container rounded-lg">{{ store.error }}</div>
+      <div
+        v-if="store.loading"
+        class="flex justify-center p-12"
+      >
+        <LoadingSpinner />
+      </div>
+      <div
+        v-else-if="store.error"
+        class="p-4 bg-error-container text-on-error-container rounded-lg"
+      >
+        {{ store.error }}
+      </div>
       
       <div v-else-if="currentResearch">
         <SectionHeader
@@ -13,9 +22,18 @@
           class="mb-6"
         />
 
-        <div v-if="fawryReference" class="p-8 text-center bg-surface-container-high rounded-xl border border-primary/20 shadow-sm mt-6">
-          <AppIcon name="receipt_long" size="xl" class="text-primary mb-4" />
-          <h3 class="text-2xl font-bold font-headline mb-2 text-on-surface">طلب الدفع قيد الانتظار</h3>
+        <div
+          v-if="fawryReference"
+          class="p-8 text-center bg-surface-container-high rounded-xl border border-primary/20 shadow-sm mt-6"
+        >
+          <AppIcon
+            name="receipt_long"
+            size="xl"
+            class="text-primary mb-4"
+          />
+          <h3 class="text-2xl font-bold font-headline mb-2 text-on-surface">
+            طلب الدفع قيد الانتظار
+          </h3>
           <p class="text-on-surface-variant mb-6 text-lg max-w-md mx-auto">
             يرجى التوجه إلى أقرب منفذ فوري واستخدام الرقم المرجعي التالي لسداد الرسوم:
           </p>
@@ -25,8 +43,18 @@
           </div>
           
           <div class="flex justify-center gap-4">
-            <BaseButton variant="primary" to="/student">العودة للرئيسية</BaseButton>
-            <BaseButton variant="outline" :to="{ name: 'student.research.detail', params: { id: currentResearch.id } }">تفاصيل البحث</BaseButton>
+            <BaseButton
+              variant="primary"
+              to="/student"
+            >
+              العودة للرئيسية
+            </BaseButton>
+            <BaseButton
+              variant="outline"
+              :to="{ name: 'student.research.detail', params: { id: currentResearch.id } }"
+            >
+              تفاصيل البحث
+            </BaseButton>
           </div>
         </div>
 
@@ -41,11 +69,28 @@
           @submit="handlePayment"
         />
 
-        <div v-else class="p-8 text-center bg-surface-container-high rounded-lg border border-outline-variant/30">
-          <AppIcon name="check_circle" size="xl" class="text-success mb-2" />
-          <h3 class="text-xl font-bold font-headline mb-1 text-on-surface">لا توجد رسوم مطلوبة</h3>
-          <p class="text-on-surface-variant">جميع الرسوم الحالية مسددة أو أن البحث ليس جاهزاً للدفع.</p>
-          <BaseButton class="mt-6" variant="primary" to="/student">العودة للرئيسية</BaseButton>
+        <div
+          v-else
+          class="p-8 text-center bg-surface-container-high rounded-lg border border-outline-variant/30"
+        >
+          <AppIcon
+            name="check_circle"
+            size="xl"
+            class="text-success mb-2"
+          />
+          <h3 class="text-xl font-bold font-headline mb-1 text-on-surface">
+            لا توجد رسوم مطلوبة
+          </h3>
+          <p class="text-on-surface-variant">
+            جميع الرسوم الحالية مسددة أو أن البحث ليس جاهزاً للدفع.
+          </p>
+          <BaseButton
+            class="mt-6"
+            variant="primary"
+            to="/student"
+          >
+            العودة للرئيسية
+          </BaseButton>
         </div>
       </div>
     </div>

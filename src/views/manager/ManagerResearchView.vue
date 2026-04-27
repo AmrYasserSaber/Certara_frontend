@@ -6,7 +6,13 @@
       description="مراجعة شاملة قبل إصدار القرار النهائي."
     >
       <template #actions>
-        <BaseButton variant="ghost" icon-left="arrow_back" to="/manager">رجوع</BaseButton>
+        <BaseButton
+          variant="ghost"
+          icon-left="arrow_back"
+          to="/manager"
+        >
+          رجوع
+        </BaseButton>
         <BaseButton
           variant="secondary"
           icon-left="workspace_premium"
@@ -17,12 +23,18 @@
       </template>
     </SectionHeader>
 
-    <div v-if="loading" class="card-flat p-12 flex justify-center">
+    <div
+      v-if="loading"
+      class="card-flat p-12 flex justify-center"
+    >
       <LoadingSpinner />
     </div>
 
     <template v-else-if="research">
-      <BaseCard title="معلومات البحث" icon="description">
+      <BaseCard
+        title="معلومات البحث"
+        icon="description"
+      >
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
           <p><span class="font-bold">العنوان:</span> {{ research.title || '—' }}</p>
           <p>
@@ -42,8 +54,14 @@
       </BaseCard>
 
       <section class="grid grid-cols-1 xl:grid-cols-2 gap-6 mt-6">
-        <BaseCard title="المستندات المرفوعة" icon="folder_open">
-          <div v-if="documents.length" class="space-y-2">
+        <BaseCard
+          title="المستندات المرفوعة"
+          icon="folder_open"
+        >
+          <div
+            v-if="documents.length"
+            class="space-y-2"
+          >
             <a
               v-for="doc in documents"
               :key="doc.id || doc.file_path"
@@ -61,11 +79,22 @@
               <span class="material-symbols-outlined">download</span>
             </a>
           </div>
-          <p v-else class="text-sm text-on-surface-variant">لا توجد مستندات متاحة.</p>
+          <p
+            v-else
+            class="text-sm text-on-surface-variant"
+          >
+            لا توجد مستندات متاحة.
+          </p>
         </BaseCard>
 
-        <BaseCard title="بيانات حجم العينة" icon="groups">
-          <div v-if="sampleSize" class="space-y-3 text-sm">
+        <BaseCard
+          title="بيانات حجم العينة"
+          icon="groups"
+        >
+          <div
+            v-if="sampleSize"
+            class="space-y-3 text-sm"
+          >
             <p>
               <span class="font-bold">الحجم المحسوب:</span> {{ sampleSize.calculated_size || '—' }}
             </p>
@@ -79,15 +108,33 @@
               {{ sampleSize.officer?.name || sampleSize.officer?.email || '—' }}
             </p>
           </div>
-          <p v-else class="text-sm text-on-surface-variant">لا توجد بيانات حجم عينة لهذا البحث.</p>
+          <p
+            v-else
+            class="text-sm text-on-surface-variant"
+          >
+            لا توجد بيانات حجم عينة لهذا البحث.
+          </p>
         </BaseCard>
       </section>
 
-      <BaseCard title="تعليقات المراجعين" icon="forum" class="mt-6">
-        <div v-if="reviewComments.length" class="space-y-3">
-          <article v-for="comment in reviewComments" :key="comment.id" class="card p-4">
+      <BaseCard
+        title="تعليقات المراجعين"
+        icon="forum"
+        class="mt-6"
+      >
+        <div
+          v-if="reviewComments.length"
+          class="space-y-3"
+        >
+          <article
+            v-for="comment in reviewComments"
+            :key="comment.id"
+            class="card p-4"
+          >
             <div class="flex items-center justify-between gap-3 mb-2">
-              <p class="font-bold text-sm">{{ comment.reviewer_name || 'مراجع' }}</p>
+              <p class="font-bold text-sm">
+                {{ comment.reviewer_name || 'مراجع' }}
+              </p>
               <p class="text-xs text-on-surface-variant font-mono">
                 {{ formatDate(comment.created_at, 'DD MMM YYYY - HH:mm') }}
               </p>
@@ -97,7 +144,12 @@
             </p>
           </article>
         </div>
-        <p v-else class="text-sm text-on-surface-variant">لا توجد تعليقات مراجعة مسجلة.</p>
+        <p
+          v-else
+          class="text-sm text-on-surface-variant"
+        >
+          لا توجد تعليقات مراجعة مسجلة.
+        </p>
       </BaseCard>
 
       <FinalDecisionPanel
@@ -107,8 +159,15 @@
       />
     </template>
 
-    <BaseCard v-else title="غير متوفر" icon="info" class="mt-6">
-      <p class="text-sm text-on-surface-variant">لم يتم العثور على البحث المطلوب.</p>
+    <BaseCard
+      v-else
+      title="غير متوفر"
+      icon="info"
+      class="mt-6"
+    >
+      <p class="text-sm text-on-surface-variant">
+        لم يتم العثور على البحث المطلوب.
+      </p>
     </BaseCard>
   </AppShellLayout>
 </template>

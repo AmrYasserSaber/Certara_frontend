@@ -11,11 +11,17 @@
         الباحث الرئيسي: <span class="text-on-surface">{{ research.principal_investigator || 'غير محدد' }}</span>
       </p>
       <div class="flex items-center gap-4 text-xs text-outline mt-2">
-        <span v-if="research.serial_number" class="font-mono bg-surface-container px-2 py-0.5 rounded font-bold text-primary">
+        <span
+          v-if="research.serial_number"
+          class="font-mono bg-surface-container px-2 py-0.5 rounded font-bold text-primary"
+        >
           {{ research.serial_number }}
         </span>
         <span class="flex items-center gap-1">
-          <AppIcon name="calendar_today" size="xs" />
+          <AppIcon
+            name="calendar_today"
+            size="xs"
+          />
           {{ formatDate(research.updated_at || research.created_at) }}
         </span>
       </div>
@@ -23,7 +29,11 @@
     
     <div class="flex flex-wrap gap-2 w-full md:w-auto mt-2 md:mt-0">
       <router-link :to="{ name: 'student.research.detail', params: { id: research.id } }">
-        <BaseButton variant="outline" size="sm" icon="visibility">
+        <BaseButton
+          variant="outline"
+          size="sm"
+          icon="visibility"
+        >
           التفاصيل
         </BaseButton>
       </router-link>
@@ -32,7 +42,11 @@
         v-if="['DRAFT', 'REVISION_REQUESTED'].includes(research.status?.toUpperCase())"
         :to="{ name: 'student.research.edit', params: { id: research.id } }"
       >
-        <BaseButton variant="primary" size="sm" icon="edit">
+        <BaseButton
+          variant="primary"
+          size="sm"
+          icon="edit"
+        >
           تعديل
         </BaseButton>
       </router-link>
@@ -41,7 +55,11 @@
         v-if="['AWAITING_PAYMENT_1', 'AWAITING_PAYMENT_2'].includes(research.status?.toUpperCase())"
         :to="{ name: 'student.research.pay', params: { id: research.id } }"
       >
-        <BaseButton variant="primary" size="sm" icon="payments">
+        <BaseButton
+          variant="primary"
+          size="sm"
+          icon="payments"
+        >
           ادفع الآن
         </BaseButton>
       </router-link>
